@@ -9,9 +9,16 @@ import {
     removeFromCart, 
     updateCartCountDisplay 
 } from './cart.js';
-import { placeOrder } from './orders.js'; // Import placeOrder
+import { placeOrder } from './orders.js';
+import { app as firebaseApp, auth as firebaseAuth } from './firebase-config.js'; // Import Firebase app and auth instance
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
 console.log("app.js loaded");
+
+// Initialize Firebase Functions
+const functions = getFunctions(firebaseApp);
+const setAdminClaimCallable = httpsCallable(functions, 'setAdminClaim');
+
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
@@ -20,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartCountDisplay(); 
 
     // --- Auth Form Listeners (Signup, Login, Logout) ---
-    // (Code for these listeners remains the same as previous step)
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', async (e) => {
@@ -47,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // General logout link for main site
     const logoutButton = document.getElementById('logout-link');
     if (logoutButton) {
         logoutButton.addEventListener('click', async (e) => {
@@ -54,21 +61,58 @@ document.addEventListener('DOMContentLoaded', () => {
             await handleLogout();
         });
     }
+    // Specific logout link for admin panel header
+    const adminLogoutButton = document.getElementById('admin-logout-link');
+    if (adminLogoutButton) {
+        adminLogoutButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await handleLogout(); // handleLogout redirects to index.html from admin pages
+        });
+    }
+
 
     // --- Page Specific Logic ---
     const pagePath = window.location.pathname;
 
-    if (pagePath.includes("products.html")) {
+    if (pagePath.endsWith("products.html") && !pagePath.includes("admin/")) {
         renderProductListPage();
-    } else if (pagePath.includes("product-detail.html")) {
+    } else if (pagePath.endsWith("product-detail.html")) {
         renderProductDetailPage();
-    } else if (pagePath.includes("cart.html")) {
+    } else if (pagePath.endsWith("cart.html")) {
         renderCartPage();
         document.addEventListener('cartUpdated', renderCartPage);
-    } else if (pagePath.includes("checkout.html")) {
+    } else if (pagePath.endsWith("checkout.html")) {
         renderCheckoutPage();
-    } else if (pagePath.includes("order_confirmation.html")) {
+    } else if (pagePath.endsWith("order_confirmation.html")) {
         renderOrderConfirmationPage();
+    } else if (pagePath.endsWith("admin.html") && !pagePath.includes("admin/")) { // Root admin.html
+        handleRootAdminPageAccess(); 
+        setupAdminFormListener(); // For the "Set User as Admin" form on root admin.html
+    } else if (pagePath.startsWith("/admin/")) { // For pages within admin/ directory
+        // General auth check for admin pages (could be more granular)
+        // onAuthStateChanged in auth.js should mostly handle this by updating window.currentUserIsAdmin
+        // and redirecting if not admin when trying to access /admin/
+        // This is an additional check for direct navigation.
+        firebaseAuth.onAuthStateChanged(async user => { // Wait for auth state to be clear
+            if (user) {
+                const idTokenResult = await user.getIdTokenResult(true);
+                if (idTokenResult.claims.isAdmin) {
+                    console.log("Admin user confirmed for /admin/ page:", pagePath);
+                    // Populate admin user email in admin header if element exists
+                    const adminUserEmailElement = document.getElementById('admin-user-email');
+                    if (adminUserEmailElement) {
+                        adminUserEmailElement.textContent = user.email;
+                    }
+                } else {
+                    console.warn("Access Denied: Non-admin user attempting to access /admin/ page. Redirecting.");
+                    alert("Access Denied. You are not authorized to view this page.");
+                    window.location.href = '../index.html'; // Redirect to main site home
+                }
+            } else {
+                console.warn("Access Denied: No user logged in. Redirecting from /admin/ page.");
+                window.location.href = '../login.html?redirect=' + encodeURIComponent(pagePath); // Redirect to login
+            }
+        });
     }
 
 
@@ -78,9 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = event.target;
             const productId = button.dataset.productId;
             let quantity = 1;
-            if (pagePath.includes("product-detail.html")) {
-                const quantityInput = document.getElementById('quantity');
-                if (quantityInput) quantity = parseInt(quantityInput.value, 10) || 1;
+            // Check if we are on product-detail.html or a similar page that might have quantity input
+            const quantityInput = document.getElementById('quantity'); // General check
+            if (quantityInput && (window.location.pathname.includes("product-detail.html") || button.closest('#product-detail-content'))) {
+                quantity = parseInt(quantityInput.value, 10) || 1;
             }
             if (productId) {
                 button.textContent = "Adding..."; button.disabled = true;
@@ -92,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- Product Listing Page (products.html) ---
-// (Function renderProductListPage remains the same as previous step)
 async function renderProductListPage() {
     const productListContainer = document.getElementById('product-list');
     if (!productListContainer) return;
@@ -124,7 +168,6 @@ async function renderProductListPage() {
 }
 
 // --- Product Detail Page (product-detail.html) ---
-// (Function renderProductDetailPage remains the same as previous step)
 async function renderProductDetailPage() {
     const productDetailContainer = document.getElementById('product-detail-content');
     if (!productDetailContainer) return;
@@ -159,7 +202,6 @@ async function renderProductDetailPage() {
 }
 
 // --- Cart Page (cart.html) ---
-// (Function renderCartPage remains the same as previous step)
 function renderCartPage() {
     const cartItemsContainer = document.getElementById('cart-items-container'); 
     const cartTotalElement = document.getElementById('cart-total'); 
@@ -211,11 +253,7 @@ function renderCartPage() {
 
 // --- Checkout Page (checkout.html) ---
 function renderCheckoutPage() {
-    // Auth check is implicitly handled by onAuthStateChanged in auth.js which redirects if not logged in.
-    // However, an explicit check here before rendering sensitive data or actions is good practice.
-    // For this project, auth.js handles the redirect if user tries to access checkout.html directly.
-
-    const checkoutFormContainer = document.getElementById('checkout-form-container'); // From checkout.html
+    const checkoutFormContainer = document.getElementById('checkout-form-container'); 
     if (!checkoutFormContainer) return;
 
     const cartItems = getCartItems();
@@ -223,46 +261,36 @@ function renderCheckoutPage() {
 
     if (cartItems.length === 0) {
         checkoutFormContainer.innerHTML = '<p>Your cart is empty. Add items to your cart to proceed to checkout.</p>';
-        const placeOrderBtn = document.getElementById('place-order-btn'); // Ensure button is not present or hidden
+        const placeOrderBtn = document.getElementById('place-order-btn'); 
         if (placeOrderBtn) placeOrderBtn.style.display = 'none';
         return;
     }
-
-    // Display Order Summary
+    
     let summaryHtml = '<h3>Order Summary</h3><ul class="checkout-summary-list">';
     cartItems.forEach(item => {
         summaryHtml += `<li>${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}</li>`;
     });
     summaryHtml += `</ul><p class="checkout-total"><strong>Grand Total: $${cartTotal.toFixed(2)}</strong></p>`;
-    
-    // Add Place Order Button HTML if not already in checkout.html static markup
-    // Assuming checkout.html has: <div id="checkout-form-container"></div>
-    // and we add the button dynamically or it's part of static HTML.
-    // For this example, let's assume checkout.html has:
-    // <div id="checkout-form-container">
-    //     <!-- Summary will be injected here -->
-    // </div>
-    // <button id="place-order-btn" class="button">Place Order</button>
-    // If button is outside container, select it directly.
-    
-    checkoutFormContainer.innerHTML = summaryHtml; // Inject summary
+    checkoutFormContainer.innerHTML = summaryHtml; 
 
-    const placeOrderBtn = document.getElementById('place-order-btn'); // Assumed to be in checkout.html
+    const placeOrderBtn = document.getElementById('place-order-btn'); 
     if (placeOrderBtn) {
-        placeOrderBtn.style.display = 'block'; // Ensure it's visible
-        placeOrderBtn.addEventListener('click', async () => {
-            placeOrderBtn.textContent = 'Placing Order...';
-            placeOrderBtn.disabled = true;
-            try {
-                await placeOrder(); // placeOrder handles redirect or error alerts
-            } catch (error) {
-                // placeOrder should handle its own errors, but just in case:
-                console.error("Error during placeOrder call from app.js:", error);
-                alert("An unexpected error occurred. Please try again.");
-                placeOrderBtn.textContent = 'Place Order';
-                placeOrderBtn.disabled = false;
-            }
-        });
+        placeOrderBtn.style.display = 'block'; 
+        if (!placeOrderBtn.dataset.listenerAttached) { 
+            placeOrderBtn.addEventListener('click', async () => {
+                placeOrderBtn.textContent = 'Placing Order...';
+                placeOrderBtn.disabled = true;
+                try {
+                    await placeOrder(); 
+                } catch (error) {
+                    console.error("Error during placeOrder call from app.js:", error);
+                    alert("An unexpected error occurred. Please try again.");
+                    placeOrderBtn.textContent = 'Place Order';
+                    placeOrderBtn.disabled = false;
+                }
+            });
+            placeOrderBtn.dataset.listenerAttached = 'true';
+        }
     } else {
         console.warn("Place Order button not found on checkout page.");
     }
@@ -270,29 +298,96 @@ function renderCheckoutPage() {
 
 // --- Order Confirmation Page (order_confirmation.html) ---
 function renderOrderConfirmationPage() {
-    const orderDetailsContainer = document.getElementById('order-details-container'); // From order_confirmation.html
-    const displayOrderIdElement = document.getElementById('display-order-id'); // Assumed to be in order_confirmation.html
-
+    const orderDetailsContainer = document.getElementById('order-details-container'); 
     if (!orderDetailsContainer) return;
 
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('orderId');
 
     if (orderId) {
-        if (displayOrderIdElement) {
-             // If you have a specific span for order ID:
-            displayOrderIdElement.textContent = orderId;
-        } else {
-            // Fallback to adding it to the container
-            orderDetailsContainer.innerHTML = `
-                <p>Thank you for your order!</p>
-                <p>Your Order ID is: <strong>${orderId}</strong></p>
-                <p><a href="index.html" class="button">Continue Shopping</a></p>
-            `;
-        }
-        // If using a specific span, ensure the surrounding text is static in the HTML
-        // e.g., order_confirmation.html: <p>Your Order ID is: <span id="display-order-id">LOADING...</span></p>
+        orderDetailsContainer.innerHTML = `
+            <p>Thank you for your order!</p>
+            <p>Your Order ID is: <strong>${orderId}</strong></p>
+            <p><a href="index.html" class="button">Continue Shopping</a></p>
+        `;
     } else {
         orderDetailsContainer.innerHTML = '<p>Order ID not found. If you just placed an order, please check your email or contact support.</p>';
+    }
+}
+
+// --- Admin Page Gatekeeper (root admin.html) & Admin Section Logic ---
+function handleRootAdminPageAccess() {
+    const accessMessageElement = document.getElementById('admin-access-message');
+    const setAdminToolContainer = document.getElementById('set-admin-tool-container');
+
+    firebaseAuth.onAuthStateChanged(async user => { // Ensure we have auth state
+        if (user) {
+            const idTokenResult = await user.getIdTokenResult(true); // Force refresh for claims
+            if (idTokenResult.claims.isAdmin) {
+                if (accessMessageElement) accessMessageElement.textContent = "Admin access confirmed. Redirecting to dashboard...";
+                if (setAdminToolContainer) setAdminToolContainer.style.display = 'block'; // Show form for other admins
+                // Redirect to the new admin dashboard
+                window.location.href = 'admin/dashboard.html'; 
+            } else {
+                if (accessMessageElement) accessMessageElement.textContent = "Access Denied. You are not an authorized administrator.";
+                if (setAdminToolContainer) setAdminToolContainer.style.display = 'none';
+                // Optionally redirect non-admins away from root admin.html too after a delay, or just show message.
+                // For now, they see the message and the "Set Admin" tool is hidden.
+            }
+        } else {
+            if (accessMessageElement) accessMessageElement.textContent = "Please login to access admin functionalities.";
+            if (setAdminToolContainer) setAdminToolContainer.style.display = 'none';
+            // Redirect to login, possibly with a redirect back to admin.html if desired
+            // window.location.href = `login.html?redirect=${encodeURIComponent(window.location.pathname)}`;
+        }
+    });
+}
+
+
+function setupAdminFormListener() {
+    // This form is on the ROOT admin.html page
+    const setAdminForm = document.getElementById('set-admin-form');
+    const feedbackElement = document.getElementById('set-admin-feedback');
+
+    if (setAdminForm && feedbackElement) {
+        // Check if user is admin before allowing this form to be functional.
+        // window.currentUserIsAdmin is set by onAuthStateChanged in auth.js
+        if (!window.currentUserIsAdmin && firebaseAuth.currentUser) {
+             // This check might be slightly delayed if onAuthStateChanged hasn't finished populating window.currentUserIsAdmin
+             // Or if user directly lands on admin.html without prior auth state check.
+             // The handleRootAdminPageAccess should ideally manage visibility of setAdminToolContainer.
+            console.warn("Non-admin attempting to access set-admin-form functionality. Form should be hidden.");
+            const setAdminToolContainer = document.getElementById('set-admin-tool-container');
+            if(setAdminToolContainer) setAdminToolContainer.style.display = 'none';
+            return; 
+        }
+
+
+        if (!setAdminForm.dataset.listenerAttached) { 
+            setAdminForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const userIdToMakeAdmin = document.getElementById('set-admin-userId').value;
+                feedbackElement.textContent = 'Processing...';
+                setAdminForm.querySelector('button').disabled = true;
+
+                if (!userIdToMakeAdmin) {
+                    feedbackElement.textContent = 'Please enter a User ID.';
+                    setAdminForm.querySelector('button').disabled = false;
+                    return;
+                }
+
+                try {
+                    const result = await setAdminClaimCallable({ userId: userIdToMakeAdmin });
+                    feedbackElement.textContent = result.data.message || 'Success!';
+                    console.log("Set admin claim result:", result);
+                } catch (error) {
+                    console.error("Error calling setAdminClaim Firebase Function:", error);
+                    feedbackElement.textContent = `Error: ${error.message || 'Could not set admin claim.'}`;
+                } finally {
+                    setAdminForm.querySelector('button').disabled = false;
+                }
+            });
+            setAdminForm.dataset.listenerAttached = 'true';
+        }
     }
 }

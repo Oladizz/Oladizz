@@ -1,0 +1,114 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check for admin custom claim
+    function isAdmin() {
+      return request.auth.token.isAdmin == true;
+    }
+
+    // Helper function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if the request is from the owner of the document
+    function isOwner(userIdField) {
+      return request.auth.uid == resource.data[userIdField];
+    }
+    
+    // Helper function to check if the request is from the owner for a new document
+    function isOwnerOfNewDoc(userIdField) {
+      return request.auth.uid == request.resource.data[userIdField];
+    }
+
+    // --- Products Collection ---
+    match /products/{productId} {
+      // Read: Allow all users (publicly readable)
+      allow read: if true;
+
+      // Create, Update, Delete: Allow only if user is an admin
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+      
+      // Validation for product data (example)
+      // allow write: if isAdmin() && 
+      //              request.resource.data.name is string &&
+      //              request.resource.data.price is number && request.resource.data.price > 0 &&
+      //              request.resource.data.stock is number && request.resource.data.stock >= 0;
+    }
+
+    // --- Orders Collection ---
+    match /orders/{orderId} {
+      // Create: Allow any authenticated user to create their own order.
+      // Ensure essential fields are present and userId matches the authenticated user.
+      allow create: if isAuthenticated() && 
+                       isOwnerOfNewDoc('userId') &&
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.items is list && size(request.resource.data.items) > 0 &&
+                       request.resource.data.totalPrice is number && request.resource.data.totalPrice > 0 &&
+                       request.resource.data.orderStatus == 'pending' && // Initial status must be pending
+                       request.resource.data.timestamp == request.time; // Enforce server timestamp
+
+      // Read: 
+      // - Admins can read any order.
+      // - Authenticated users can read their own orders.
+      allow read: if isAdmin() || (isAuthenticated() && isOwner('userId'));
+
+      // Update:
+      // - Admins can update any order (e.g., to change orderStatus).
+      // - Users cannot update their orders directly through these rules after creation (e.g. cancellation would be a specific action).
+      allow update: if isAdmin(); 
+      // Example for admin updating only specific fields like orderStatus:
+      // allow update: if isAdmin() && 
+      //                  request.resource.data.keys().hasOnly(['orderStatus', 'otherAdminEditableField']); 
+
+      // Delete: Restrict to admins. (Generally orders are archived or marked, not deleted).
+      allow delete: if isAdmin();
+    }
+
+    // --- Reviews Collection ---
+    // Assumes fields: productId, productName, userId, userEmail, rating, comment, timestamp, status
+    match /reviews/{reviewId} {
+      // Read: Allow all users (reviews are public after approval).
+      // Could be refined: allow read: if resource.data.status == 'approved' || isAdmin();
+      allow read: if true; 
+
+      // Create: Allow any authenticated user to create their own review.
+      // Ensure essential fields are present and userId matches the authenticated user.
+      allow create: if isAuthenticated() &&
+                       isOwnerOfNewDoc('userId') &&
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.productId is string &&
+                       request.resource.data.productName is string && // Denormalized
+                       request.resource.data.rating is number && request.resource.data.rating >= 1 && request.resource.data.rating <= 5 &&
+                       request.resource.data.comment is string && size(request.resource.data.comment) > 0 &&
+                       request.resource.data.status == 'pending' && // Initial status must be pending
+                       request.resource.data.timestamp == request.time; // Enforce server timestamp
+
+      // Update:
+      // - Admins can update any review (e.g., to change status).
+      // - Users could update their own review if status is 'pending' (example, not fully implemented)
+      allow update: if isAdmin() || 
+                       (isAuthenticated() && isOwner('userId') && resource.data.status == 'pending' && 
+                        request.resource.data.status == resource.data.status); // User can only update their own pending review, not its status
+
+      // Delete:
+      // - Admins can delete any review.
+      // - Users can delete their own review (optional).
+      allow delete: if isAdmin() || (isAuthenticated() && isOwner('userId'));
+    }
+
+    // --- (No separate 'users' Firestore collection defined in this project that needs rules) ---
+    // If a 'users' collection existed for profiles:
+    // match /users/{userId} {
+    //   allow create: if isAuthenticated() && request.auth.uid == userId; // User creates their own profile
+    //   allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+    //   allow update: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+    //   allow delete: if isAdmin(); // Or disallow
+    // }
+
+  }
+}

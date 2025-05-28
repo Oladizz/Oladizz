@@ -1,0 +1,443 @@
+/* Admin Panel Styles */
+:root {
+    --admin-bg-color: #000000;
+    --admin-primary-color: #00A8E8; /* Tech Blue */
+    --admin-accent-color: #00FFFF;   /* Neon Cyan/Blue */
+    --admin-text-color: #E0E0E0;     /* Light Gray/Off-White */
+    --admin-header-height: 60px;
+    --admin-sidebar-width: 250px;
+    --admin-font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --danger-color: #dc3545; 
+    --success-color: #28a745; 
+    --warning-color: #ffc107; 
+}
+
+body {
+    font-family: var(--admin-font-family);
+    background-color: var(--admin-bg-color);
+    color: var(--admin-text-color);
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    overflow-x: hidden; 
+}
+
+.admin-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: var(--admin-sidebar-width);
+    background-color: #111; 
+    padding: 20px;
+    height: 100vh; 
+    position: fixed; 
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    border-right: 1px solid var(--admin-primary-color);
+    box-shadow: 2px 0 5px rgba(0, 168, 232, 0.2);
+}
+
+.admin-sidebar .logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.admin-sidebar .logo a {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--admin-primary-color);
+    text-decoration: none;
+}
+.admin-sidebar .logo a:hover {
+    color: var(--admin-accent-color);
+}
+
+.admin-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-sidebar nav ul li a {
+    display: block;
+    color: var(--admin-text-color);
+    padding: 12px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1.05rem;
+}
+
+.admin-sidebar nav ul li a:hover,
+.admin-sidebar nav ul li a.active {
+    background-color: var(--admin-primary-color);
+    color: var(--admin-bg-color); 
+    font-weight: 500;
+}
+.admin-sidebar nav ul li a.active {
+    box-shadow: 0 0 10px var(--admin-accent-color);
+}
+
+/* Main Content Area */
+.admin-main-content {
+    margin-left: var(--admin-sidebar-width); 
+    width: calc(100% - var(--admin-sidebar-width));
+    height: 100vh;
+    overflow-y: auto; 
+    padding: 0; 
+}
+
+/* Admin Header (within main content) */
+.admin-header {
+    height: var(--admin-header-height);
+    background-color: #1a1a1a; 
+    color: var(--admin-text-color);
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--admin-primary-color);
+}
+
+.admin-header h1 {
+    font-size: 1.6rem;
+    color: var(--admin-primary-color);
+    margin: 0;
+}
+
+.admin-header .user-info {
+    font-size: 0.9rem;
+}
+.admin-header .user-info a { 
+    color: var(--admin-accent-color);
+    text-decoration: none;
+    margin-left: 15px;
+}
+.admin-header .user-info a:hover {
+    text-decoration: underline;
+}
+
+
+/* Content within admin pages */
+.admin-page-content {
+    padding: 30px;
+}
+
+.admin-page-content h2 { 
+    color: var(--admin-primary-color);
+    border-bottom: 2px solid var(--admin-accent-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+/* Basic card for dashboard stats or content blocks */
+.admin-card {
+    background-color: #1c1c1c;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.admin-card h3 {
+    color: var(--admin-accent-color);
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Table Styling */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #1c1c1c;
+    color: var(--admin-text-color);
+    font-size: 0.95rem; 
+}
+.admin-table th, .admin-table td {
+    border: 1px solid #333;
+    padding: 10px 12px; 
+    text-align: left;
+    vertical-align: middle; 
+}
+.admin-table thead th {
+    background-color: var(--admin-primary-color);
+    color: var(--admin-bg-color);
+    font-weight: 600;
+}
+.admin-table tbody tr:nth-child(even) {
+    background-color: #222;
+}
+.admin-table tbody tr:hover {
+    background-color: #2a2a2a;
+    color: var(--admin-accent-color);
+}
+.admin-table a { 
+    color: var(--admin-accent-color);
+    text-decoration: underline;
+}
+.admin-table a:hover {
+    color: var(--admin-primary-color);
+}
+
+.admin-table .action-btn {
+    padding: 6px 10px; 
+    margin-right: 5px;
+    margin-bottom: 5px; 
+    border-radius: 3px;
+    text-decoration: none;
+    color: var(--admin-bg-color); 
+    font-size: 0.85rem; 
+    cursor: pointer;
+    border: none;
+    display: inline-block; 
+}
+.admin-table .edit-btn, 
+.admin-table .view-items-btn,
+.admin-table .manage-role-btn, 
+.admin-table .view-orders-btn { 
+    background-color: var(--admin-primary-color); 
+}
+.admin-table .delete-btn { background-color: var(--danger-color); }
+.admin-table .toggle-disabled-btn[data-current-disabled="false"] { 
+    background-color: var(--warning-color); color: #333;
+}
+.admin-table .toggle-disabled-btn[data-current-disabled="true"] { 
+    background-color: var(--success-color); color: var(--white-color);
+}
+.admin-table .approve-btn {
+    background-color: var(--success-color);
+    color: var(--white-color); /* Ensure text is readable */
+}
+.admin-table .reject-btn {
+    background-color: var(--danger-color);
+    color: var(--white-color); /* Ensure text is readable */
+}
+
+
+.admin-table .action-btn:hover {
+    opacity: 0.85;
+}
+
+
+/* Responsive Design for Admin Panel */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: static; 
+        border-right: none;
+        border-bottom: 1px solid var(--admin-primary-color);
+        box-shadow: 0 2px 5px rgba(0, 168, 232, 0.2);
+    }
+    .admin-sidebar nav ul {
+        display: flex;
+        flex-direction: row; 
+        justify-content: space-around; 
+        flex-wrap: wrap; 
+    }
+    .admin-sidebar nav ul li a {
+        font-size: 0.95rem;
+        padding: 10px;
+        margin-bottom: 0;
+    }
+    .admin-sidebar .logo {
+        display: none; 
+    }
+
+    .admin-main-content {
+        margin-left: 0;
+        width: 100%;
+        height: auto; 
+    }
+    .admin-header h1 {
+        font-size: 1.3rem;
+    }
+    .admin-header {
+        padding: 0 15px;
+    }
+    .admin-page-content {
+        padding: 20px;
+    }
+    /* Responsive table: allow horizontal scrolling */
+    .admin-table-responsive-wrapper { /* Wrap tables in this div if they are too wide */
+        overflow-x: auto;
+    }
+}
+
+/* General form styling for admin */
+.admin-form div {
+    margin-bottom: 1rem;
+}
+.admin-form label {
+    display: block;
+    margin-bottom: .5rem;
+    color: var(--admin-primary-color);
+    font-weight: 500;
+}
+.admin-form input[type="text"],
+.admin-form input[type="email"],
+.admin-form input[type="password"],
+.admin-form input[type="number"],
+.admin-form input[type="url"], 
+.admin-form input[type="checkbox"], 
+.admin-form textarea,
+.admin-form select,
+.admin-form-select 
+{
+    width: 100%;
+    padding: .75rem;
+    background-color: #222;
+    border: 1px solid #444;
+    color: var(--admin-text-color);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+/* Specific styling for checkboxes to not be full-width */
+.admin-form input[type="checkbox"] {
+    width: auto; 
+    margin-right: 10px;
+    vertical-align: middle;
+}
+.admin-form label[for*="modal-is-admin"] { 
+    display: inline-block; 
+}
+
+
+.admin-form input:focus, 
+.admin-form textarea:focus, 
+.admin-form select:focus,
+.admin-form-select:focus {
+    outline: none;
+    border-color: var(--admin-accent-color);
+    box-shadow: 0 0 5px var(--admin-accent-color);
+}
+.admin-form button[type="submit"], .admin-form .button {
+    background-color: var(--admin-primary-color);
+    color: var(--admin-bg-color);
+    padding: .75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color .3s;
+}
+.admin-form button[type="submit"]:hover, .admin-form .button:hover {
+    background-color: var(--admin-accent-color);
+}
+.admin-form .feedback-message {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+.admin-form .feedback-message.success {
+    background-color: var(--success-color);
+    color: var(--admin-bg-color);
+    border: 1px solid darken(var(--success-color), 10%);
+}
+.admin-form .feedback-message.error {
+    background-color: var(--danger-color);
+    color: var(--admin-bg-color);
+    border: 1px solid darken(var(--danger-color), 10%);
+}
+
+/* Modal Styling */
+.admin-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.7); 
+}
+
+.admin-modal-content {
+    background-color: #1e1e1e; 
+    margin: 10% auto; 
+    padding: 25px;
+    border: 1px solid var(--admin-primary-color);
+    border-radius: 5px;
+    width: 80%; 
+    max-width: 600px; 
+    box-shadow: 0 5px 15px rgba(0, 168, 232, 0.3);
+    position: relative;
+    color: var(--admin-text-color);
+}
+
+.admin-modal-content h3, .admin-modal-content h4 {
+    color: var(--admin-primary-color);
+    margin-top: 0;
+    border-bottom: 1px solid var(--admin-accent-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.admin-modal-content ul { 
+    list-style: none;
+    padding: 0;
+}
+.admin-modal-content ul li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #444;
+}
+.admin-modal-content ul li:last-child {
+    border-bottom: none;
+}
+
+.modal-close-btn { 
+    color: var(--admin-accent-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.modal-close-btn:hover,
+.modal-close-btn:focus {
+    color: var(--admin-text-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Specific for User Role Modal form elements if needed */
+#manage-user-role-form p { margin-bottom: 0.5rem; }
+#manage-user-role-form p strong { color: var(--admin-accent-color); }
+
+/* Load More Button styling */
+#load-more-users-btn {
+    display: block; 
+    margin: 20px auto; 
+    background-color: var(--admin-primary-color);
+    color: var(--admin-bg-color);
+}
+#load-more-users-btn:hover {
+    background-color: var(--admin-accent-color);
+}
+
+/* Styling for review status indicators (optional, if added to rows) */
+.review-row.status-pending td:first-child::before {
+    content: "⏳ "; /* Example indicator */
+    color: var(--warning-color);
+}
+.review-row.status-approved td:first-child::before {
+    content: "✅ ";
+    color: var(--success-color);
+}
+.review-row.status-rejected td:first-child::before {
+    content: "❌ ";
+    color: var(--danger-color);
+}

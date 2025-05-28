@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - Admin Panel</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <div class="logo">
+                <a href="dashboard.html">Admin Panel</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="orders.html">Orders</a></li>
+                    <li><a href="users.html" class="active">Users</a></li>
+                    <li><a href="income.html">Income</a></li>
+                    <li><a href="statistics.html">Statistics</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="../index.html">Exit Admin (View Site)</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="admin-main-content">
+            <header class="admin-header">
+                <h1>Manage Users</h1>
+                <div class="user-info">
+                    <span id="admin-user-email"></span> 
+                    <a href="#" id="admin-logout-link" style="color: var(--admin-accent-color);">Logout</a>
+                </div>
+            </header>
+            <section class="admin-page-content">
+                <h2>User Management</h2>
+                
+                <div class="admin-card" id="admin-user-list-container">
+                    <h3>All Users</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>UID</th>
+                                <th>Email</th>
+                                <th>Display Name</th>
+                                <th>Created On</th>
+                                <th>Last Sign-in</th>
+                                <th>Status (Enabled/Disabled)</th>
+                                <th>Admin?</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table-body">
+                            <!-- Users will be loaded here by JavaScript -->
+                            <tr><td colspan="8">Loading users...</td></tr>
+                        </tbody>
+                    </table>
+                    <button id="load-more-users-btn" class="button" style="display:none; margin-top: 20px;">Load More Users</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Manage User Role Modal -->
+    <div id="manage-user-role-modal" class="admin-modal" style="display: none;">
+        <div class="admin-modal-content">
+            <span class="user-role-modal-close modal-close-btn">&times;</span> <!-- Generic close button class -->
+            <h3>Manage User Role</h3>
+            <form id="manage-user-role-form" class="admin-form">
+                <input type="hidden" id="modal-user-id">
+                <div>
+                    <p><strong>User Email:</strong> <span id="modal-user-email"></span></p>
+                </div>
+                <div>
+                    <label for="modal-is-admin" style="display:inline-block; margin-right: 10px;">Is Admin:</label>
+                    <input type="checkbox" id="modal-is-admin" name="isAdmin" style="width: auto; vertical-align: middle;">
+                </div>
+                <button type="submit" class="button">Update Role</button>
+                <p id="modal-role-feedback" class="feedback-message" style="margin-top:15px;"></p>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script type="module" src="../js/app.js"></script> 
+    <script type="module" src="js/admin-users.js"></script> <!-- Specific JS for this page -->
+</body>
+</html>

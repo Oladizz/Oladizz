@@ -6,21 +6,26 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { auth } from './firebase-config.js';
 
+// --- Global variable for admin status ---
+// This is a simple way for this project. In larger apps, consider a state management solution.
+window.currentUserIsAdmin = false;
+
 // UI Elements - these could also be passed as parameters or handled in app.js
 const loginLink = document.getElementById('login-link');
 const signupLink = document.getElementById('signup-link');
 const logoutLink = document.getElementById('logout-link');
-const userEmailDisplay = document.getElementById('user-email'); // Assuming an element with this ID exists
+const userEmailDisplay = document.getElementById('user-email');
+const adminPanelLink = document.getElementById('admin-panel-link'); // Assuming this ID will be added to HTML
 
 // --- Sign-up Function ---
 async function handleSignUp(email, password) {
-    const signupErrorElement = document.getElementById('signup-error'); // Specific to signup page
+    const signupErrorElement = document.getElementById('signup-error');
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         console.log("Successfully signed up:", userCredential.user);
-        if (signupErrorElement) signupErrorElement.textContent = ''; // Clear any previous errors
-        alert("Sign up successful! Please login."); // Simple feedback
-        window.location.href = 'login.html'; // Redirect to login page
+        if (signupErrorElement) signupErrorElement.textContent = '';
+        alert("Sign up successful! Please login.");
+        window.location.href = 'login.html';
     } catch (error) {
         console.error("Sign up error:", error);
         if (signupErrorElement) signupErrorElement.textContent = error.message;
@@ -30,13 +35,12 @@ async function handleSignUp(email, password) {
 
 // --- Login Function ---
 async function handleLogin(email, password) {
-    const loginErrorElement = document.getElementById('login-error'); // Specific to login page
+    const loginErrorElement = document.getElementById('login-error');
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         console.log("Successfully logged in:", userCredential.user);
         if (loginErrorElement) loginErrorElement.textContent = '';
-        // alert("Login successful!"); // onAuthStateChanged will handle UI and redirect
-        // Redirect is handled by onAuthStateChanged if user is on login page
+        // onAuthStateChanged will handle UI updates and redirects
     } catch (error) {
         console.error("Login error:", error);
         if (loginErrorElement) loginErrorElement.textContent = error.message;
@@ -49,11 +53,10 @@ async function handleLogout() {
     try {
         await signOut(auth);
         console.log("Successfully logged out.");
-        // alert("Logged out successfully."); // onAuthStateChanged will handle UI and redirect
-        // No explicit redirect here, onAuthStateChanged will update UI,
-        // and if on a protected page, a check should redirect.
-        // For now, if on index, it will just update header.
-        if (window.location.pathname.includes("checkout.html") || window.location.pathname.includes("order_confirmation.html")){
+        // onAuthStateChanged will handle UI and redirect
+        // Reset admin status on logout
+        window.currentUserIsAdmin = false; 
+        if (window.location.pathname.includes("admin.html") || window.location.pathname.includes("checkout.html") || window.location.pathname.includes("order_confirmation.html")){
             window.location.href = 'index.html';
         }
     } catch (error) {
@@ -63,19 +66,34 @@ async function handleLogout() {
 }
 
 // --- Authentication State Observer ---
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
     const loginPagePaths = ['/login.html', '/signup.html'];
     const isLoginPage = loginPagePaths.some(path => window.location.pathname.endsWith(path));
 
     if (user) {
         // User is signed in
-        console.log("User is logged in:", user);
+        console.log("User is logged in:", user.email);
+        
+        // Force refresh ID token to get latest custom claims
+        try {
+            const idTokenResult = await user.getIdTokenResult(true); // true forces refresh
+            window.currentUserIsAdmin = idTokenResult.claims.isAdmin === true;
+            console.log("User isAdmin status:", window.currentUserIsAdmin);
+        } catch (error) {
+            console.error("Error fetching ID token or claims:", error);
+            window.currentUserIsAdmin = false; // Default to false on error
+        }
+
+        // Update UI based on auth state and admin status
         if (loginLink) loginLink.style.display = 'none';
         if (signupLink) signupLink.style.display = 'none';
-        if (logoutLink) logoutLink.style.display = 'block'; // Or 'inline' or ''
+        if (logoutLink) logoutLink.style.display = 'block';
         if (userEmailDisplay) userEmailDisplay.textContent = `Logged in as: ${user.email}`;
+        
+        if (adminPanelLink) {
+            adminPanelLink.style.display = window.currentUserIsAdmin ? 'block' : 'none';
+        }
 
-        // If on login/signup page and logged in, redirect to home
         if (isLoginPage) {
             console.log("User is on login/signup page, redirecting to home.");
             window.location.href = 'index.html';
@@ -83,14 +101,15 @@ onAuthStateChanged(auth, (user) => {
     } else {
         // User is signed out
         console.log("User is logged out.");
+        window.currentUserIsAdmin = false; // Reset admin status
+
         if (loginLink) loginLink.style.display = 'block';
         if (signupLink) signupLink.style.display = 'block';
         if (logoutLink) logoutLink.style.display = 'none';
         if (userEmailDisplay) userEmailDisplay.textContent = '';
+        if (adminPanelLink) adminPanelLink.style.display = 'none';
 
-        // If on a page that requires auth (e.g. checkout) and user is logged out, redirect to login
-        // This is a basic example; more robust routing might be needed for complex apps
-        const protectedPagePaths = ['/checkout.html', '/order_confirmation.html']; // Add other protected pages
+        const protectedPagePaths = ['/checkout.html', '/order_confirmation.html', '/admin.html'];
         const isProtectedPage = protectedPagePaths.some(path => window.location.pathname.endsWith(path));
         if (isProtectedPage) {
             console.log("User is on a protected page and logged out, redirecting to login.");
@@ -99,5 +118,4 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Export functions to be used in app.js or directly by event listeners
 export { handleSignUp, handleLogin, handleLogout };
