@@ -3,107 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE APP</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>E-commerce Home</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Home Page -->
-    <div id="homePage" class="page" style="display: flex;">
-        <div id="coinsContainer">
-            <p id="userCoins"><strong>$ACE <span id="coinAmount">0</span></strong></p>
-        </div>
-        <div id="checkInContainer" style="text-align: right;">
-            <p id="checkInStatus">Daily Check-in Status: Checked in <span id="checkInCount">0</span> times</p>
-        </div>
-        <div class="circle" id="newGifContainer">
-            <img id="newGif" src="LCPT.gif" alt="Farming GIF">
-        </div>
-        
-        <!-- Farming Button and Countdown -->
-        <button id="farmingButton" onclick="startFarming()">Farm 5 $ACE</button>
-        <div id="farmingCountdown"></div> <!-- Countdown will appear here -->
+    <header>
+        <nav>
+            <div class="container">
+                <h1><a href="index.html">My Store</a></h1>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                    <li><a href="login.html" id="login-link">Login</a></li>
+                    <li><a href="signup.html" id="signup-link">Sign Up</a></li>
+                    <li><a href="#" id="logout-link" style="display:none;">Logout</a></li>
+                    <li><span id="user-email" style="color: #fff; padding-left: 10px;"></span></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-        <!-- Claim Button, initially hidden -->
-        <p id="claimContainer" style="display:none;">
-            <button id="claimButton" onclick="claimRewards()">Claim</button>
-        </p>
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2>Discover Amazing Products</h2>
+                <p>Your one-stop shop for the best deals and latest trends.</p>
+                <a href="products.html" class="button">Shop Now</a>
+            </div>
+        </section>
 
-        <!-- Navbar -->
-        <div id="navbar">
-            <a href="#" onclick="showTaskPage()">
-                <button id="taskButton">Tasks</button>
-            </a>
-            <a href="#" onclick="showHomePage()">
-                <button id="homeButton">Home</button>
-            </a>
-            <a href="#" onclick="showFriendsPage()">
-                <button id="friendsButton">Friends</button>
-            </a>
+        <div class="container">
+            <h2>Featured Products</h2>
+            <p>Check out some of our handpicked items below. (Static content for now)</p>
+            <!-- Placeholder for featured products - can be manually added or later dynamic -->
+            <div id="featured-product-list" class="product-list" style="margin-top: 20px;">
+                <!-- Example static product card (repeat as needed) -->
+                <div class="product-card">
+                    <a href="#">
+                        <img src="https://via.placeholder.com/200x150.png?text=Featured+Product+1" alt="Featured Product 1">
+                        <h3>Product Name 1</h3>
+                    </a>
+                    <p class="price">$19.99</p>
+                    <button class="add-to-cart-btn" data-product-id="feat1">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <a href="#">
+                        <img src="https://via.placeholder.com/200x150.png?text=Featured+Product+2" alt="Featured Product 2">
+                        <h3>Product Name 2</h3>
+                    </a>
+                    <p class="price">$29.99</p>
+                    <button class="add-to-cart-btn" data-product-id="feat2">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <a href="#">
+                        <img src="https://via.placeholder.com/200x150.png?text=Featured+Product+3" alt="Featured Product 3">
+                        <h3>Product Name 3</h3>
+                    </a>
+                    <p class="price">$39.99</p>
+                    <button class="add-to-cart-btn" data-product-id="feat3">Add to Cart</button>
+                </div>
+            </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Task Page (Hidden) -->
-    <div id="taskPage" class="page" style="display: none;">
-        <h2>Available Tasks</h2>
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 My E-commerce Store</p>
+        </div>
+    </footer>
 
-        <!-- Tasks with buttons linked to opening links and showing countdown -->
-        <div class="taskContainer" id="task1">
-            <p>Follow ACE LABS on X (Twitter) (Reward: 7 $ACE)</p>
-            <button class="task-button" onclick="startTask('task1', 'https://twitter.com/ace_labs')">Start Task</button>
-            <p id="taskCountdown1"></p>
-        </div>
-        <div class="taskContainer" id="task2">
-            <p>Subscribe to ACE Telegram channel (Reward: 7 $ACE)</p>
-            <button class="task-button" onclick="startTask('task2', 'https://t.me/ace_labs')">Start Task</button>
-            <p id="taskCountdown2"></p>
-        </div>
-        <div class="taskContainer" id="task3">
-            <p>Follow ACE LABS on Instagram (Reward: 7 $ACE)</p>
-            <button class="task-button" onclick="startTask('task3', 'https://instagram.com/ace_labs')">Start Task</button>
-            <p id="taskCountdown3"></p>
-        </div>
-        <div class="taskContainer" id="task4">
-            <p>Follow ACE LABS on Facebook (Reward: 7 $ACE)</p>
-            <button class="task-button" onclick="startTask('task4', 'https://facebook.com/ace_labs')">Start Task</button>
-            <p id="taskCountdown4"></p>
-        </div>
-        <div class="taskContainer" id="task5">
-            <p>Follow ACE LABS on TikTok (Reward: 7 $ACE)</p>
-            <button class="task-button" onclick="startTask('task5', 'https://tiktok.com/@ace_labs')">Start Task</button>
-            <p id="taskCountdown5"></p>
-        </div>
-        <div class="taskContainer" id="task6">
-            <p>Subscribe to ACE LABS YouTube channel (Reward: 7 $ACE)</p>
-            <button class="task-button" onclick="startTask('task6', 'https://youtube.com/ace_labs')">Start Task</button>
-            <p id="taskCountdown6"></p>
-        </div>
-
-        <a href="#" onclick="showHomePage()">
-            <button>Back to Home</button>
-        </a>
-    </div>
-
-    <!-- Friends/Referral Page -->
-    <div id="friendsPage" class="page" style="display: none;">
-        <h3>Your Referred Friends</h3>
-        <ul id="referredFriendsList">
-            <!-- Dynamic list of referred friends will be populated here -->
-            <li>Friend 1 - Earned 5 $ACE</li>
-            <li>Friend 2 - Earned 5 $ACE</li>
-            <li>Friend 3 - Earned 5 $ACE</li>
-        </ul>
-        <p>Referral Link: 
-            <input type="text" id="referralLink" readonly value="https://ACE APP.com/ref?123">
-            <a href="#" onclick="copyReferralLink()">
-                <button id="copyReferralButton">Copy</button>
-            </a>
-        </p>
-        <a href="#" onclick="showHomePage()">
-            <button>Back to Home</button>
-        </a>
-    </div>
-
-    <!-- External JavaScript -->
-    <script src="app.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/app.js"></script> 
 </body>
 </html>

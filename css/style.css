@@ -1,0 +1,657 @@
+/* Global Styles & Variables */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --white-color: #ffffff;
+    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Basic Reset */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body { 
+    font-family: var(--font-family-sans-serif);
+    line-height: 1.6; 
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container { 
+    width: 90%; 
+    max-width: 1200px; /* Max width for larger screens */
+    margin: auto; 
+    padding: 20px; 
+}
+
+main.container {
+    flex: 1; /* Make main content area grow */
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+    color: darken(var(--primary-color), 10%);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--dark-color); /* Or a slightly darker shade */
+}
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.5rem; }
+
+/* Basic header/nav styling */
+header {
+    background: var(--dark-color);
+    color: var(--white-color);
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+header h1 a { /* Store Name / Logo */
+    color: var(--white-color);
+    text-transform: uppercase;
+    font-size: 1.5rem; /* Slightly larger */
+    font-weight: bold;
+}
+header h1 a:hover {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+header nav ul { 
+    list-style: none; 
+    display: flex; /* Use flex for nav items */
+    align-items: center;
+}
+header nav ul li { 
+    margin-left: 20px; /* Spacing between nav items */
+}
+header nav ul li a {
+    color: var(--white-color);
+    padding: 0.5rem 0; /* Better touch targets */
+    transition: color 0.2s ease-in-out;
+}
+header nav ul li a:hover,
+header nav ul li a.active { /* For active page link if implemented */
+    color: var(--primary-color);
+    text-decoration: none;
+}
+#user-email { /* User email display in nav */
+    color: var(--light-color); /* Lighter color for user email */
+    font-size: 0.9rem;
+    margin-left: 10px;
+}
+#cart-count {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    margin-left: 4px;
+}
+
+
+/* Basic footer styling */
+footer {
+    background: var(--dark-color);
+    color: var(--white-color);
+    text-align: center;
+    padding: 2rem 0; /* Increased padding */
+    margin-top: auto; /* Push footer to bottom */
+}
+
+/* Utility classes */
+.button, button { /* Apply to button elements as well */
+    display: inline-block;
+    background: var(--primary-color);
+    color: var(--white-color);
+    padding: 0.6rem 1.2rem; /* Adjusted padding */
+    text-decoration: none;
+    border: none;
+    border-radius: 0.25rem; /* Standardized border-radius */
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.button:hover, button:hover {
+    background: darken(var(--primary-color), 10%); /* Darken on hover */
+    text-decoration: none; /* No underline on button hover */
+    color: var(--white-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+.button:disabled, button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Error Messages */
+.error-message {
+    color: var(--danger-color);
+    background-color: lighten(var(--danger-color), 35%); /* Light red background */
+    border: 1px solid var(--danger-color);
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+/* Success Messages (example, can be added to HTML if needed) */
+.success-message {
+    color: var(--success-color);
+    background-color: lighten(var(--success-color), 45%);
+    border: 1px solid var(--success-color);
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-top: 10px;
+}
+
+
+/* Basic Form Styling */
+form {
+    background: var(--white-color);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+form div { /* Wrapper for label + input */
+    margin-bottom: 1rem;
+}
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+form input[type="email"],
+form input[type="password"],
+form input[type="text"],
+form input[type="number"],
+form textarea {
+    width: 100%;
+    padding: 0.75rem; /* Increased padding */
+    border: 1px solid #ced4da; /* Softer border */
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form textarea:focus {
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); /* Focus ring */
+}
+form button[type="submit"] { /* Specific styling for submit buttons in forms */
+    background-color: var(--success-color); /* Green for submit */
+    width: 100%; /* Full width */
+    padding: 0.75rem;
+    font-size: 1.1rem;
+}
+form button[type="submit"]:hover {
+    background-color: darken(var(--success-color), 10%);
+}
+
+/* Centered form container for login/signup */
+.form-container {
+    max-width: 500px;
+    margin: 40px auto; /* Center on page */
+}
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+
+/* Product Grid Styling (products.html) - Base from previous steps */
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px; /* Increased gap */
+    margin-top: 20px;
+}
+.product-card {
+    border: 1px solid #e9ecef; /* Softer border */
+    border-radius: 0.3rem; /* Slightly more rounded */
+    padding: 1rem;
+    text-align: center;
+    background-color: var(--white-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Softer shadow */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: space-between; /* Push button to bottom */
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.product-card img {
+    max-width: 100%;
+    height: 200px; /* Adjusted height */
+    object-fit: cover; 
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+.product-card h3 {
+    font-size: 1.15rem; /* Slightly adjusted */
+    margin-bottom: 0.5rem; 
+    color: var(--dark-color);
+}
+.product-card a {
+    text-decoration: none;
+    color: inherit; 
+}
+.product-card .price {
+    font-size: 1.2rem; /* Larger price */
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.product-card .add-to-cart-btn { 
+    background-color: var(--primary-color); 
+    color: var(--white-color);
+    /* Other button styles inherited or can be specific */
+    padding: 0.5rem 1rem; /* Specific padding */
+    align-self: center; /* Center button if card uses flex */
+    width: auto; /* Not full width */
+}
+.product-card .add-to-cart-btn:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+
+/* Product Detail Page Styling (product-detail.html) - Base from previous steps */
+#product-detail-content {
+    margin-top: 20px;
+    padding: 25px; 
+    background-color: var(--white-color);
+    border: 1px solid #e9ecef;
+    border-radius: 0.3rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+}
+#product-detail-content .product-image-large {
+    max-width: 60%; /* Adjusted size */
+    height: auto;
+    border-radius: 0.25rem;
+    margin-bottom: 1.5rem; /* Increased margin */
+    border: 1px solid #eee;
+}
+#product-detail-content h2 {
+    font-size: 2.2rem; /* Larger heading */
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+}
+#product-detail-content .description {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    max-width: 75%; 
+}
+#product-detail-content .price {
+    font-size: 1.75rem; /* Prominent price */
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+#product-detail-content .quantity-selector {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+#product-detail-content .quantity-selector label {
+    margin-right: 10px;
+    font-weight: 500;
+}
+#product-detail-content .quantity-selector input[type="number"] {
+    width: 70px; /* Wider input */
+    padding: 0.5rem; 
+    text-align: center;
+}
+#product-detail-content .add-to-cart-btn { 
+    background-color: var(--success-color); /* Green for add to cart */
+    /* Other styles inherited */
+    padding: 0.75rem 1.5rem; /* Larger button */
+    font-size: 1.1rem;
+}
+#product-detail-content .add-to-cart-btn:hover {
+    background-color: darken(var(--success-color), 10%);
+}
+
+/* Cart Page Styling (cart.html) - Base from previous steps */
+#cart-items-container {
+    margin-top: 20px;
+}
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background-color: var(--white-color);
+    border-radius: 0.3rem;
+    overflow: hidden; /* For rounded corners on table */
+}
+.cart-table th, .cart-table td {
+    border: 1px solid #e9ecef;
+    padding: 1rem; /* Increased padding */
+    text-align: left;
+    vertical-align: middle; 
+}
+.cart-table th {
+    background-color: var(--light-color); 
+    color: var(--dark-color);
+    font-weight: 600; /* Bolder headers */
+}
+.cart-table img {
+    width: 70px; /* Slightly larger image */
+    height: auto;
+    border-radius: 0.25rem;
+}
+.cart-table .quantity-input {
+    width: 70px; 
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+.cart-table .remove-item-btn {
+    background-color: var(--danger-color);
+    /* Inherits other button styles */
+    padding: 0.4rem 0.8rem; /* Smaller remove button */
+}
+.cart-table .remove-item-btn:hover {
+    background-color: darken(var(--danger-color), 10%);
+}
+#cart-total {
+    margin-top: 20px;
+    text-align: right;
+    padding-right: 10px; 
+}
+#cart-total h3 {
+    font-size: 1.6rem; /* Prominent total */
+    color: var(--dark-color);
+}
+main.container a.button[href="checkout.html"] { /* Checkout button on cart page */
+    display: block; 
+    width: fit-content; 
+    margin: 30px auto 10px auto; 
+    background-color: var(--success-color); 
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+main.container a.button[href="checkout.html"]:hover {
+    background-color: darken(var(--success-color), 10%);
+}
+
+/* Checkout Page Styling (checkout.html) - Base from previous steps */
+#checkout-form-container {
+    background-color: var(--white-color);
+    padding: 30px; /* Increased padding */
+    border-radius: 0.3rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    margin-top: 20px;
+}
+#checkout-form-container h3 {
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.75rem;
+}
+ul.checkout-summary-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+ul.checkout-summary-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed #e9ecef;
+    color: #555;
+}
+ul.checkout-summary-list li:last-child {
+    border-bottom: none;
+}
+p.checkout-total {
+    font-size: 1.4rem; /* Adjusted size */
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: right;
+    margin-top: 1rem;
+}
+#place-order-btn { 
+    display: block; 
+    width: fit-content;
+    margin: 30px auto 10px auto; 
+    background-color: var(--success-color);
+    padding: 0.75rem 2rem; /* Wider button */
+    font-size: 1.2rem; 
+}
+#place-order-btn:hover {
+    background-color: darken(var(--success-color), 10%);
+}
+
+/* Order Confirmation Page Styling (order_confirmation.html) - Base from previous steps */
+#order-details-container {
+    background-color: var(--white-color);
+    padding: 30px; 
+    border-radius: 0.3rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-top: 20px;
+    text-align: center; 
+}
+#order-details-container h2 { 
+    color: var(--success-color); 
+    margin-bottom: 1.5rem;
+}
+#order-details-container p {
+    font-size: 1.1rem;
+    color: var(--dark-color);
+    margin-bottom: 0.75rem;
+}
+#order-details-container strong { 
+    color: var(--primary-color);
+}
+#order-details-container a.button { 
+    margin-top: 1.5rem;
+    background-color: var(--primary-color);
+}
+#order-details-container a.button:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .container {
+        width: 95%;
+    }
+    #product-list {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Smaller cards on tablet */
+    }
+}
+
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        align-items: center; /* Center items in column */
+    }
+    header h1 {
+        margin-bottom: 0.5rem;
+    }
+    header nav ul {
+        flex-direction: column; /* Stack nav items */
+        width: 100%;
+        align-items: center; /* Center nav items */
+    }
+    header nav ul li {
+        margin-left: 0;
+        margin-bottom: 0.5rem; /* Space between stacked items */
+        width: 100%;
+        text-align: center;
+    }
+    header nav ul li a {
+        display: block; /* Make links full width for easier tapping */
+        padding: 0.5rem;
+    }
+    #user-email {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+
+    #product-list {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Even smaller cards */
+        gap: 15px;
+    }
+    .product-card img {
+        height: 150px;
+    }
+
+    #product-detail-content .product-image-large {
+        max-width: 85%;
+    }
+    #product-detail-content h2 { font-size: 1.8rem; }
+    #product-detail-content .price { font-size: 1.5rem; }
+
+    .cart-table th, .cart-table td {
+        padding: 0.75rem; /* Smaller padding on mobile */
+        font-size: 0.9rem; /* Smaller font for table content */
+    }
+    .cart-table img {
+        width: 50px;
+    }
+    .cart-table .quantity-input {
+        width: 50px;
+        padding: 0.4rem;
+    }
+    .cart-table .remove-item-btn {
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #product-list {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+    }
+    .product-card img {
+        height: 180px; /* Allow a bit more height in single column */
+    }
+    
+    /* Simplify cart table for very small screens - potentially a card layout */
+    /* This is a basic adjustment; a full card layout would require HTML changes */
+    .cart-table thead {
+        display: none; /* Hide table headers */
+    }
+    .cart-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #eee;
+        border-radius: 0.25rem;
+    }
+    .cart-table td {
+        display: block;
+        text-align: right; /* Align text to right */
+        padding-left: 50%; /* Create space for label */
+        position: relative;
+        border: none; /* Remove cell borders */
+        border-bottom: 1px solid #eee; /* Add bottom border for separation */
+    }
+    .cart-table td:last-child {
+        border-bottom: none;
+    }
+    .cart-table td::before {
+        content: attr(data-label); /* Requires data-label attributes on td in JS or HTML */
+        position: absolute;
+        left: 10px;
+        width: calc(50% - 20px);
+        padding-right: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+    /* Simpler stacking for cart items on very small screens */
+    .cart-table thead { display: none; } /* Hide headers */
+    .cart-table tbody, .cart-table tr, .cart-table td { display: block; width: 100%; }
+    .cart-table tr { margin-bottom: 1rem; border: 1px solid #eee; border-radius: 0.25rem; padding: 0.5rem; }
+    .cart-table td { text-align: right; padding-left: 20%; position: relative; border: none; border-bottom: 1px dotted #eee; }
+    .cart-table td:last-child { border-bottom: none; }
+    .cart-table td::before { 
+        content: attr(data-label-sm); /* Will use this if JS adds it, otherwise just stacks */
+        /* Let's add some default "labels" based on column, assuming order: img, name, price, qty, subtotal, action */
+        position: absolute; left: 10px; width: auto; padding-right: 10px; font-weight: bold; text-align: left; white-space: nowrap;
+    }
+    .cart-table td:nth-of-type(1)::before { content: "Product:"; } /* Image column, label "Product" */
+    .cart-table td:nth-of-type(2)::before { content: "Name:"; }
+    .cart-table td:nth-of-type(3)::before { content: "Price:"; }
+    .cart-table td:nth-of-type(4)::before { content: "Quantity:"; }
+    .cart-table td:nth-of-type(5)::before { content: "Subtotal:"; }
+    .cart-table td:nth-of-type(6)::before { content: "Action:"; }
+    .cart-table td img { float: right; } /* Align image to the right with this stacking */
+    .cart-table .quantity-input { float: right; } /* Align input to right */
+    .cart-table .remove-item-btn { float: right; } /* Align button to right */
+}
+
+/* Homepage Hero Section */
+.hero {
+    background: var(--primary-color);
+    color: var(--white-color);
+    padding: 4rem 0;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--white-color);
+}
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+.hero .button {
+    background-color: var(--white-color);
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    padding: 0.8rem 1.8rem;
+}
+.hero .button:hover {
+    background-color: #e9ecef; /* Light gray */
+    color: var(--primary-color);
+}
