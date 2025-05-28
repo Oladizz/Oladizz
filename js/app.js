@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (adminLogoutButton) {
         adminLogoutButton.addEventListener('click', async (e) => {
             e.preventDefault();
-            await handleLogout(); // handleLogout redirects to index.html from admin pages
+            await handleLogout(); 
         });
     }
 
@@ -87,30 +87,34 @@ document.addEventListener('DOMContentLoaded', () => {
         renderOrderConfirmationPage();
     } else if (pagePath.endsWith("admin.html") && !pagePath.includes("admin/")) { // Root admin.html
         handleRootAdminPageAccess(); 
-        setupAdminFormListener(); // For the "Set User as Admin" form on root admin.html
+        setupAdminFormListener(); 
     } else if (pagePath.startsWith("/admin/")) { // For pages within admin/ directory
-        // General auth check for admin pages (could be more granular)
-        // onAuthStateChanged in auth.js should mostly handle this by updating window.currentUserIsAdmin
-        // and redirecting if not admin when trying to access /admin/
-        // This is an additional check for direct navigation.
-        firebaseAuth.onAuthStateChanged(async user => { // Wait for auth state to be clear
+        // This is the guard for all pages under /admin/ (e.g., /admin/dashboard.html)
+        firebaseAuth.onAuthStateChanged(async user => { 
             if (user) {
-                const idTokenResult = await user.getIdTokenResult(true);
-                if (idTokenResult.claims.isAdmin) {
+                const idTokenResult = await user.getIdTokenResult(true); // Force refresh for claims
+                if (idTokenResult.claims.isAdmin === true) {
                     console.log("Admin user confirmed for /admin/ page:", pagePath);
-                    // Populate admin user email in admin header if element exists
+                    // Update admin user email in the admin panel header
                     const adminUserEmailElement = document.getElementById('admin-user-email');
                     if (adminUserEmailElement) {
                         adminUserEmailElement.textContent = user.email;
                     }
+                    // If specific page rendering functions for admin pages are needed, call them here
+                    // For example, if on admin/products.html, call an adminRenderProductPage()
                 } else {
-                    console.warn("Access Denied: Non-admin user attempting to access /admin/ page. Redirecting.");
+                    // User is logged in but NOT an admin
+                    console.warn("Access Denied: Non-admin user attempting to access /admin/ page. Redirecting to main site homepage.");
                     alert("Access Denied. You are not authorized to view this page.");
                     window.location.href = '../index.html'; // Redirect to main site home
                 }
             } else {
-                console.warn("Access Denied: No user logged in. Redirecting from /admin/ page.");
-                window.location.href = '../login.html?redirect=' + encodeURIComponent(pagePath); // Redirect to login
+                // No user is logged in
+                console.warn("Access Denied: No user logged in. Redirecting from /admin/ page to login.");
+                // Redirect to login, and then after login, onAuthStateChanged in auth.js will handle further redirection.
+                // If they log in as non-admin, the check above will then redirect them to index.html.
+                // If they log in as admin, they will be allowed (or redirected to admin dashboard by root admin.html logic).
+                window.location.href = `../login.html?redirect=${encodeURIComponent(window.location.href)}`; 
             }
         });
     }
@@ -122,8 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = event.target;
             const productId = button.dataset.productId;
             let quantity = 1;
-            // Check if we are on product-detail.html or a similar page that might have quantity input
-            const quantityInput = document.getElementById('quantity'); // General check
+            const quantityInput = document.getElementById('quantity'); 
             if (quantityInput && (window.location.pathname.includes("product-detail.html") || button.closest('#product-detail-content'))) {
                 quantity = parseInt(quantityInput.value, 10) || 1;
             }
@@ -320,52 +323,49 @@ function handleRootAdminPageAccess() {
     const accessMessageElement = document.getElementById('admin-access-message');
     const setAdminToolContainer = document.getElementById('set-admin-tool-container');
 
-    firebaseAuth.onAuthStateChanged(async user => { // Ensure we have auth state
+    firebaseAuth.onAuthStateChanged(async user => { 
         if (user) {
-            const idTokenResult = await user.getIdTokenResult(true); // Force refresh for claims
-            if (idTokenResult.claims.isAdmin) {
+            const idTokenResult = await user.getIdTokenResult(true); 
+            if (idTokenResult.claims.isAdmin === true) {
                 if (accessMessageElement) accessMessageElement.textContent = "Admin access confirmed. Redirecting to dashboard...";
-                if (setAdminToolContainer) setAdminToolContainer.style.display = 'block'; // Show form for other admins
-                // Redirect to the new admin dashboard
+                if (setAdminToolContainer) setAdminToolContainer.style.display = 'block'; 
                 window.location.href = 'admin/dashboard.html'; 
             } else {
                 if (accessMessageElement) accessMessageElement.textContent = "Access Denied. You are not an authorized administrator.";
                 if (setAdminToolContainer) setAdminToolContainer.style.display = 'none';
-                // Optionally redirect non-admins away from root admin.html too after a delay, or just show message.
-                // For now, they see the message and the "Set Admin" tool is hidden.
             }
         } else {
             if (accessMessageElement) accessMessageElement.textContent = "Please login to access admin functionalities.";
             if (setAdminToolContainer) setAdminToolContainer.style.display = 'none';
-            // Redirect to login, possibly with a redirect back to admin.html if desired
-            // window.location.href = `login.html?redirect=${encodeURIComponent(window.location.pathname)}`;
         }
     });
 }
 
 
 function setupAdminFormListener() {
-    // This form is on the ROOT admin.html page
     const setAdminForm = document.getElementById('set-admin-form');
     const feedbackElement = document.getElementById('set-admin-feedback');
 
     if (setAdminForm && feedbackElement) {
-        // Check if user is admin before allowing this form to be functional.
-        // window.currentUserIsAdmin is set by onAuthStateChanged in auth.js
-        if (!window.currentUserIsAdmin && firebaseAuth.currentUser) {
-             // This check might be slightly delayed if onAuthStateChanged hasn't finished populating window.currentUserIsAdmin
-             // Or if user directly lands on admin.html without prior auth state check.
-             // The handleRootAdminPageAccess should ideally manage visibility of setAdminToolContainer.
-            console.warn("Non-admin attempting to access set-admin-form functionality. Form should be hidden.");
-            const setAdminToolContainer = document.getElementById('set-admin-tool-container');
-            if(setAdminToolContainer) setAdminToolContainer.style.display = 'none';
-            return; 
-        }
-
-
+        // This check relies on window.currentUserIsAdmin being set by auth.js's onAuthStateChanged
+        // which runs after this script's DOMContentLoaded if auth.js is imported later or async.
+        // For robustness, we should ideally check claims directly here if possible, or ensure auth.js has run.
+        // However, handleRootAdminPageAccess above already manages visibility of setAdminToolContainer
+        // based on fresh claim checks. So, if the form is visible, the user is likely an admin.
+        
         if (!setAdminForm.dataset.listenerAttached) { 
             setAdminForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                // Double check admin status before attempting to call a privileged function
+                const user = firebaseAuth.currentUser;
+                if (!user) {
+                    feedbackElement.textContent = 'Error: You are not logged in.'; return;
+                }
+                const idTokenResult = await user.getIdTokenResult(true);
+                if (idTokenResult.claims.isAdmin !== true) {
+                    feedbackElement.textContent = 'Error: You are not authorized to perform this action.'; return;
+                }
+
                 const userIdToMakeAdmin = document.getElementById('set-admin-userId').value;
                 feedbackElement.textContent = 'Processing...';
                 setAdminForm.querySelector('button').disabled = true;

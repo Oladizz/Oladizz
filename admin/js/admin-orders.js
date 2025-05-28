@@ -3,15 +3,18 @@ import {
     collection, 
     getDocs, 
     doc, 
+    getDoc, // Added getDoc for fetching single order for modal
     updateDoc,
-    orderBy, // To order orders by timestamp
-    query // To use orderBy
+    orderBy, 
+    query,
+    where // Added where for filtering
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const ordersTableBody = document.getElementById('admin-orders-table-body');
 const orderItemsModal = document.getElementById('order-items-modal');
 const orderItemsModalContent = document.getElementById('modal-order-items-content');
-const closeModalButton = document.querySelector('.order-modal-close'); // Assuming a class for the close button
+const closeModalButton = document.querySelector('.order-modal-close'); 
+const adminPageHeaderTitle = document.querySelector('.admin-main-content .admin-header h1'); // To update page title
 
 // --- Display Orders ---
 async function displayAdminOrders() {
@@ -21,13 +24,33 @@ async function displayAdminOrders() {
     }
     ordersTableBody.innerHTML = '<tr><td colspan="6">Loading orders...</td></tr>';
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterUserId = urlParams.get('userId');
+    let originalPageTitle = "Manage Orders"; // Default title
+
+    let ordersQuery;
+    const ordersCollectionRef = collection(db, "orders");
+
+    if (filterUserId) {
+        console.log(`Filtering orders for userId: ${filterUserId}`);
+        if (adminPageHeaderTitle) {
+            originalPageTitle = adminPageHeaderTitle.textContent; // Store original if needed later
+            adminPageHeaderTitle.textContent = `Orders for User: ${filterUserId.substring(0,10)}...`; // Show partial UID
+        }
+        ordersQuery = query(ordersCollectionRef, where('userId', '==', filterUserId), orderBy("timestamp", "desc"));
+    } else {
+        if (adminPageHeaderTitle && adminPageHeaderTitle.textContent !== originalPageTitle) {
+             adminPageHeaderTitle.textContent = originalPageTitle; // Reset if no filter
+        }
+        ordersQuery = query(ordersCollectionRef, orderBy("timestamp", "desc"));
+    }
+
+
     try {
-        // Query orders, ordered by timestamp descending
-        const ordersQuery = query(collection(db, "orders"), orderBy("timestamp", "desc"));
         const querySnapshot = await getDocs(ordersQuery);
 
         if (querySnapshot.empty) {
-            ordersTableBody.innerHTML = '<tr><td colspan="6">No orders found.</td></tr>';
+            ordersTableBody.innerHTML = `<tr><td colspan="6">No orders found${filterUserId ? ' for this user' : ''}.</td></tr>`;
             return;
         }
 
@@ -72,6 +95,9 @@ async function displayAdminOrders() {
     } catch (error) {
         console.error("Error fetching orders for admin: ", error);
         ordersTableBody.innerHTML = '<tr><td colspan="6">Error loading orders. Check console.</td></tr>';
+         if (adminPageHeaderTitle && filterUserId) { // Reset title on error if it was changed
+            adminPageHeaderTitle.textContent = originalPageTitle;
+        }
     }
 }
 
@@ -86,7 +112,6 @@ async function handleOrderStatusChange(event) {
         return;
     }
 
-    // Add some visual feedback to the select element or row
     selectElement.disabled = true;
     const originalBgColor = selectElement.style.backgroundColor;
     selectElement.style.backgroundColor = "var(--admin-accent-color)";
@@ -98,20 +123,21 @@ async function handleOrderStatusChange(event) {
             orderStatus: newStatus
         });
         alert(`Order ${orderId} status updated to ${newStatus}.`);
-        // Optionally, refresh part of the row or just rely on next full load
-        // For now, just visual feedback and it will be correct on next page load/refresh of table
-        selectElement.style.backgroundColor = "lightgreen"; // Indicate success
+        selectElement.style.backgroundColor = "lightgreen"; 
         setTimeout(() => {
-             selectElement.style.backgroundColor = originalBgColor; // Revert after a moment
+             selectElement.style.backgroundColor = originalBgColor; 
         }, 1500);
 
     } catch (error) {
         console.error(`Error updating status for order ${orderId}: `, error);
         alert(`Failed to update status for order ${orderId}. Error: ${error.message}`);
-        selectElement.value = selectElement.querySelector('option[selected]').value; // Revert to original status on error
-        selectElement.style.backgroundColor = "lightcoral"; // Indicate error
+        // Find the previously selected option and revert
+        const previouslySelectedOption = Array.from(selectElement.options).find(opt => opt.defaultSelected);
+        if (previouslySelectedOption) selectElement.value = previouslySelectedOption.value;
+
+        selectElement.style.backgroundColor = "lightcoral"; 
          setTimeout(() => {
-             selectElement.style.backgroundColor = originalBgColor; // Revert after a moment
+             selectElement.style.backgroundColor = originalBgColor; 
         }, 1500);
     } finally {
         selectElement.disabled = false;
@@ -126,11 +152,11 @@ async function showOrderItemsModal(orderId) {
     }
 
     orderItemsModalContent.innerHTML = '<p>Loading items...</p>';
-    orderItemsModal.style.display = 'block'; // Show modal
+    orderItemsModal.style.display = 'block'; 
 
     try {
-        const orderRef = doc(db, "orders", orderId);
-        const docSnap = await getDoc(orderRef);
+        const orderRef = doc(db, "orders", orderId); // Need to import getDoc
+        const docSnap = await getDoc(orderRef); // Make sure getDoc is imported
 
         if (docSnap.exists()) {
             const order = docSnap.data();
@@ -139,7 +165,7 @@ async function showOrderItemsModal(orderId) {
                 order.items.forEach(item => {
                     itemsHtml += `
                         <li>
-                            ${item.name} (ID: ${item.id || item.productId || 'N/A'}) - 
+                            ${item.name} (ID: ${item.productId || item.id || 'N/A'}) - 
                             Quantity: ${item.quantity} - 
                             Price: $${Number(item.price).toFixed(2)} each
                         </li>`;
@@ -169,26 +195,22 @@ function hideOrderItemsModal() {
 // --- Initialize Page ---
 function initAdminOrdersPage() {
     console.log("Initializing Admin Orders Page...");
-    displayAdminOrders();
+    displayAdminOrders(); // This will now check for userId in URL
 
-    // Event listener for closing the modal
     if (closeModalButton) {
         closeModalButton.addEventListener('click', hideOrderItemsModal);
     }
-    // Also close modal if user clicks outside the modal content (optional)
     if (orderItemsModal) {
         orderItemsModal.addEventListener('click', (event) => {
-            if (event.target === orderItemsModal) { // Clicked on the backdrop
+            if (event.target === orderItemsModal) { 
                 hideOrderItemsModal();
             }
         });
     }
 }
 
-// Ensure this script runs after DOM is loaded and only on admin/orders.html
 if (window.location.pathname.endsWith('/admin/orders.html')) {
     document.addEventListener('DOMContentLoaded', initAdminOrdersPage);
 }
 
 export { displayAdminOrders, handleOrderStatusChange, showOrderItemsModal };
-// Exporting for potential direct calls or testing.

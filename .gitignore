@@ -1,0 +1,9 @@
+# Firebase
+js/firebase-config.js
+
+# Node / Firebase Functions specific (good practice)
+node_modules/
+functions/node_modules/
+npm-debug.log
+*.env
+functions/.runtimeconfig.json
