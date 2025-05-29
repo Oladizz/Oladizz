@@ -170,27 +170,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // --- Search Form Listener ---
-        const searchForm = document.getElementById('search-form');
-        if (searchForm) {
-            searchForm.addEventListener('submit', (event) => {
-                event.preventDefault();
-                const searchInput = document.getElementById('search-input');
-                const query = searchInput.value.trim();
-                
-                const currentUrlParams = new URLSearchParams(window.location.search);
-                if (query) {
-                    currentUrlParams.set('search', query);
-                } else {
-                    currentUrlParams.delete('search');
-                }
-                window.location.href = `products.html?${currentUrlParams.toString()}`;
-            });
-        }
+        // --- Search Form Listener (Old - Removed) ---
+        // const searchForm = document.getElementById('search-form');
+        // if (searchForm) {
+        //     searchForm.addEventListener('submit', (event) => {
+        //         event.preventDefault();
+        //         const searchInput = document.getElementById('search-input');
+        //         const query = searchInput.value.trim();
+        //         
+        //         const currentUrlParams = new URLSearchParams(window.location.search);
+        //         if (query) {
+        //             currentUrlParams.set('search', query);
+        //         } else {
+        //             currentUrlParams.delete('search');
+        //         }
+        //         window.location.href = `products.html?${currentUrlParams.toString()}`;
+        //     });
+        // }
 
         // --- Price Filter & Sort Listeners (only on products.html) ---
-        if (pagePath.endsWith("products.html")) {
+        // --- Also includes the NEW search listener for products.html ---
+        if (pagePath.endsWith("products.html") && !pagePath.includes("admin/")) { // Ensure not admin products page
             setupProductPageListeners(); 
+
+            // --- New Search Form Listener (for product-page-search-form) ---
+            const productPageSearchForm = document.getElementById('product-page-search-form');
+            if (productPageSearchForm) {
+                productPageSearchForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const searchInput = document.getElementById('product-page-search-input');
+                    const query = searchInput.value.trim();
+                    
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (query) {
+                        urlParams.set('search', query);
+                    } else {
+                        urlParams.delete('search');
+                    }
+                    // Update URL and reload page (will trigger renderProductListPage)
+                    window.location.search = urlParams.toString(); 
+                });
+            }
         }
 
         // --- Initialize Carousel (only on index.html) ---

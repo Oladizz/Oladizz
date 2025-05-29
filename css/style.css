@@ -182,6 +182,9 @@ header h1 a:hover {
     font-weight: 700; 
     box-shadow: 0 0 8px var(--primary-color);
 }
+
+/* Styles for the old header search form - REMOVED */
+/*
 #search-form {
     display: flex; 
     align-items: center;
@@ -191,12 +194,12 @@ header h1 a:hover {
     background-color: rgba(0, 0, 0, 0.2); 
     border: 1px solid var(--primary-color);
     color: var(--text-color);
-    padding: 0.4rem 0.7rem; /* Sleeker padding */
-    border-radius: 1rem 0 0 1rem; /* Very curved */
+    padding: 0.4rem 0.7rem; 
+    border-radius: 1rem 0 0 1rem; 
     font-size: 0.9rem;
     font-family: var(--font-family-cyber);
     flex-grow: 1; 
-    min-width: 250px; /* Increased min-width */
+    min-width: 250px; 
 }
 #search-form input[type="search"]::placeholder {
     color: var(--secondary-text-color);
@@ -205,10 +208,10 @@ header h1 a:hover {
 #search-form button[type="submit"] { 
     background-color: var(--primary-color);
     color: var(--body-bg-color); 
-    padding: 0.4rem 0.7rem; /* Sleeker padding */
+    padding: 0.4rem 0.7rem; 
     border: 1px solid var(--primary-color);
     border-left: none; 
-    border-radius: 0 1rem 1rem 0; /* Very curved */
+    border-radius: 0 1rem 1rem 0; 
     cursor: pointer;
     font-size: 0.9rem;
     font-family: var(--font-family-cyber);
@@ -218,8 +221,9 @@ header h1 a:hover {
 #search-form button[type="submit"]:hover {
     background-color: var(--white-color);
     color: var(--primary-color);
-    box-shadow: 0 0 8px var(--primary-color), 0 0 18px var(--primary-color), 0 0 28px var(--primary-color); /* Thicker glow */
+    box-shadow: 0 0 8px var(--primary-color), 0 0 18px var(--primary-color), 0 0 28px var(--primary-color); 
 }
+*/
 
 /* Basic footer styling */
 footer {
@@ -522,6 +526,8 @@ form label[for*="modal-is-admin"] {
     header h1 { 
         order: 0; 
     }
+    /* #search-form (old header search) specific mobile styles - REMOVED */
+    /*
     #search-form { 
         order: 3; 
         width: 100%;
@@ -531,6 +537,7 @@ form label[for*="modal-is-admin"] {
      #search-form input[type="search"] {
         flex-grow: 1;
     }
+    */
     #main-nav-links {
         display: none; 
         flex-direction: column;
@@ -575,6 +582,69 @@ form label[for*="modal-is-admin"] {
 /* These will inherit the new base styles or use their specific overrides from Turn 81 overwrite */
 /* Further refinements can be made in subsequent steps if needed */
 
+/* Styles for Product Page Filters & New Search Bar */
+#product-filters-container {
+    background-color: var(--container-bg-color); /* Align with theme */
+    padding: 1.5rem; /* Adjusted padding */
+    border-radius: 1rem; /* Very curved edges */
+    border: 1px solid var(--accent-border-color);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    margin-bottom: 2rem; /* Space below filters */
+}
+
+#search-on-product-page-container {
+    margin-bottom: 1.5rem; /* Space below search before other filters */
+}
+#search-on-product-page-container h3 {
+    margin-bottom: 0.75rem; /* Adjusted margin */
+    color: var(--primary-color); 
+    text-transform: uppercase;
+    font-size: 1.1rem; /* Adjusted font size */
+    letter-spacing: 0.5px;
+}
+#product-page-search-form {
+    display: flex;
+    width: 100%; 
+    background-color: transparent; /* Form itself is transparent, inputs styled */
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    margin-top: 0; /* Overrides default form margin-top if any */
+}
+#product-page-search-input {
+    flex-grow: 1;
+    /* General input styling is inherited: dark bg, light text, neon focus, cyber font */
+    padding: 0.6rem 0.8rem; /* Consistent with other inputs */
+    border-radius: 0.8rem 0 0 0.8rem; /* Very curved - left part */
+    border-right: none; /* Button is directly attached */
+    /* Ensure it uses var(--border-color) and var(--accent-border-color) on focus via general input styles */
+}
+#product-page-search-form button {
+    /* General button styling is inherited */
+    border-radius: 0 0.8rem 0.8rem 0; /* Very curved - right part */
+    white-space: nowrap; /* Prevent "Search" text from wrapping */
+    padding: 0.6rem 1rem; /* Match input height, adjust as needed */
+    font-size: 1rem; /* Match input font-size */
+    /* The general button hover/focus will apply (neon glow, etc.) */
+}
+
+/* Styling for other filter sections within #product-filters-container for consistency */
+#product-filters-container h3 { /* General H3 within filters */
+    margin-bottom: 0.75rem;
+    color: var(--primary-color); 
+    text-transform: uppercase;
+    font-size: 1.1rem; 
+    letter-spacing: 0.5px;
+}
+#price-filter-form {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    margin-top: 0;
+}
+
+
 #product-detail-content { margin-top: 25px; padding: 20px; background-color: var(--dark-color); border: 1px solid var(--primary-color); border-radius: 1rem; box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); display: flex; flex-direction: column; align-items: center; }
 #product-detail-content .product-image-large { max-width: 60%; height: auto; border-radius: 0.8rem; margin-bottom: 2rem; border: 1px solid var(--primary-color); }
 #product-detail-content h2 { font-size: 2.3rem; color: var(--primary-color); margin-bottom: 1.25rem; font-weight: 700; }
@@ -612,3 +682,165 @@ a.category-card { border-radius: 1rem; padding: 1.2rem 0.8rem; }
 @media (max-width: 992px) { #product-list { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
 @media (max-width: 768px) { #product-list { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
 @media (max-width: 576px) { #product-list { grid-template-columns: 1fr; } }
+
+
+/* "Very Small" Mobile Adjustments */
+@media (max-width: 480px) {
+    html {
+        font-size: 13px; /* Reduced base font size */
+    }
+
+    /* Adjust body padding for potentially smaller header */
+    /* Header padding is 0.8rem (13px * 0.8 = 10.4px). H1 font size is 1.5rem (13px * 1.5 = 19.5px) */
+    /* Original header padding was 0.8rem (15px*0.8=12px). H1 font 1.8rem (15px*1.8=27px) */
+    /* Total original header height was roughly 2*12 + 27 = 51px + box-shadow. New one 2*10.4 + 19.5 = 40.3px */
+    /* Let's try a body padding-top around 55px to be safe, can be fine-tuned */
+    body {
+        padding-top: 55px; 
+    }
+
+    header {
+        padding: 0.6rem 0; /* Slightly reduce header padding */
+    }
+    header h1 a {
+        font-size: 1.5rem; /* Reduced header title font size */
+    }
+    #mobile-menu-toggle { /* Ensure toggle button is not too large */
+        font-size: 1.5rem;
+        padding: 0.2rem 0.5rem;
+    }
+    #main-nav-links li a { /* Reduce padding for nav items in dropdown */
+        padding: 0.6rem 0.8rem;
+    }
+
+
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.2rem; }
+    h4 { font-size: 1.0rem; }
+    h5 { font-size: 0.9rem; }
+    h6 { font-size: 0.8rem; }
+
+    p, form label, form input, form select, form textarea { /* Reduce general text & form element sizes */
+        font-size: 0.9rem; /* Relative to new base 13px */
+        margin-bottom: 0.6rem;
+    }
+    form div {
+        margin-bottom: 0.8rem;
+    }
+
+    .container {
+        padding: 0.5rem; /* Significantly reduced container padding */
+    }
+    main.container {
+        padding-top: 1rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .button, button {
+        padding: 0.4rem 0.8rem; /* Reduced button padding */
+        font-size: 0.9rem; /* Reduced button font size */
+        border-radius: 0.6rem; /* Slightly smaller curve if needed */
+    }
+    /* Search button on product page, ensure it aligns with input */
+    #product-page-search-form button {
+         padding: 0.4rem 0.8rem; /* Match other buttons */
+         font-size: 0.9rem; /* Match other buttons */
+    }
+
+
+    form {
+        padding: 15px; /* Reduced form padding */
+        margin-top: 15px;
+    }
+    form input[type="email"],
+    form input[type="password"],
+    form input[type="text"],
+    form input[type="number"],
+    form input[type="url"],
+    form input[type="search"],
+    form textarea,
+    form select {
+        padding: 0.4rem 0.6rem; /* Reduced input padding */
+        border-radius: 0.4rem; /* Slightly smaller curve */
+    }
+    /* Product page search input specific padding */
+    #product-page-search-input {
+        padding: 0.4rem 0.6rem; /* Match other inputs */
+        border-radius: 0.6rem 0 0 0.6rem; /* Match button */
+    }
+
+
+    /* Product Card adjustments */
+    .product-card {
+        padding: 0.5rem; /* Reduced card padding */
+        border-radius: 0.8rem; /* Slightly smaller curve */
+    }
+    .product-card img {
+        height: 150px; /* Reduced image height */
+        margin-bottom: 0.5rem;
+        border-radius: 0.6rem;
+    }
+    .product-card h3 {
+        font-size: 1.0rem; /* Smaller product name */
+        margin-bottom: 0.4rem;
+    }
+    .product-card .price {
+        font-size: 1.0rem; /* Smaller price */
+        margin-bottom: 0.5rem;
+    }
+    .product-card .add-to-cart-btn {
+        padding: 0.4rem 0.8rem; /* Match other buttons */
+        font-size: 0.85rem; /* Slightly smaller if needed */
+    }
+
+    /* Filters on products.html */
+    #product-filters-container {
+        padding: 1rem; /* Reduced padding */
+        margin-bottom: 1.5rem;
+    }
+    #product-filters-container h3 { /* Titles within filters */
+        font-size: 1.0rem; 
+        margin-bottom: 0.5rem;
+    }
+    #search-on-product-page-container {
+        margin-bottom: 1rem;
+    }
+    #price-filter-form {
+        gap: 10px; /* Reduce gap between price inputs/button */
+    }
+    #price-filter-form div { /* Min/max price input containers */
+        min-width: 100px; /* Allow them to shrink more */
+    }
+    .category-filter-link.button { /* Category filter buttons */
+        padding: 0.3rem 0.6rem;
+        font-size: 0.85rem;
+    }
+    #sort-options { /* Sort dropdown */
+        padding: 0.4rem;
+        font-size: 0.9rem;
+        min-width: 150px; /* Allow to shrink */
+    }
+    
+    /* Footer adjustments */
+    footer {
+        padding: 1.5rem 0;
+    }
+    footer p {
+        font-size: 0.85rem;
+    }
+
+    /* Cart page adjustments */
+    .cart-table th, .cart-table td {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+    .cart-table img {
+        width: 40px;
+    }
+    .cart-table .quantity-input {
+        padding: 0.3rem;
+        font-size: 0.85rem;
+        width: 45px;
+    }
+}
