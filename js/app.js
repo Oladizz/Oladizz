@@ -28,6 +28,17 @@ const setAdminClaimCallable = httpsCallable(functions, 'setAdminClaim');
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Purpose: Extremely basic test to see if app.js is running and can modify login.html
+    const loginPageHeading = document.querySelector('main.container h2'); // Targets the "Login" heading
+    if (loginPageHeading && window.location.pathname.endsWith('/login.html')) {
+        loginPageHeading.textContent = 'LOGIN PAGE JS TEST OK';
+        loginPageHeading.style.color = 'purple'; 
+    } else if (window.location.pathname.endsWith('/login.html')) {
+        // If heading not found, use an alert for visibility on phone
+        alert('LOGIN PAGE JS TEST: Heading not found by app.js!');
+    }
+
+    /*
     const loginErrorDebugForOuter = document.getElementById('login-error'); 
     if (loginErrorDebugForOuter) {
         loginErrorDebugForOuter.textContent = 'JS DOMContentLoaded fired. app.js is running.';
@@ -220,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         console.error("Critical error in app.js DOMContentLoaded:", e);
     }
+    */
 });
 
 function setupProductPageListeners() {
