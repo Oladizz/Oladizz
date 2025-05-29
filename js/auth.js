@@ -2,7 +2,9 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
     signOut, 
-    onAuthStateChanged 
+    onAuthStateChanged,
+    GoogleAuthProvider, // Added
+    signInWithPopup     // Added
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { auth } from './firebase-config.js';
 
@@ -71,6 +73,23 @@ onAuthStateChanged(auth, async (user) => {
     const loginPagePaths = ['/login.html', '/signup.html'];
     const isLoginPage = loginPagePaths.some(path => window.location.pathname.endsWith(path));
 
+    // Attach listeners for Google Sign-In buttons if they exist
+    const googleSignInBtnLogin = document.getElementById('google-signin-btn-login');
+    if (googleSignInBtnLogin) {
+        // Check if listener already attached to prevent duplicates if script re-runs or DOM is manipulated
+        if (!googleSignInBtnLogin.dataset.listenerAttached) {
+            googleSignInBtnLogin.addEventListener('click', handleGoogleSignIn);
+            googleSignInBtnLogin.dataset.listenerAttached = 'true';
+        }
+    }
+    const googleSignInBtnSignup = document.getElementById('google-signin-btn-signup');
+    if (googleSignInBtnSignup) {
+        if (!googleSignInBtnSignup.dataset.listenerAttached) {
+            googleSignInBtnSignup.addEventListener('click', handleGoogleSignIn);
+            googleSignInBtnSignup.dataset.listenerAttached = 'true';
+        }
+    }
+
     if (user) {
         // User is signed in
         console.log("User is logged in:", user.email);
@@ -129,4 +148,44 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-export { handleSignUp, handleLogin, handleLogout };
+// --- Google Sign-In Function ---
+async function handleGoogleSignIn() {
+    const provider = new GoogleAuthProvider();
+    // Ensure error elements exist or use alerts
+    const loginErrorElement = document.getElementById('login-error');
+    const signupErrorElement = document.getElementById('signup-error');
+    const generalErrorElement = loginErrorElement || signupErrorElement; // Use whichever is available
+
+    try {
+        const result = await signInWithPopup(auth, provider);
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log("Successfully signed in with Google:", user);
+        // The onAuthStateChanged observer will handle UI updates and redirection.
+        // You could check getAdditionalUserInfo(result).isNewUser if you need to perform
+        // specific actions for new users created via Google Sign-In.
+    } catch (error) {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData?.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        
+        console.error("Google Sign-In Error:", errorCode, errorMessage, email, credential);
+        
+        if (generalErrorElement) {
+            generalErrorElement.textContent = `Google Sign-In Failed: ${errorMessage} (Code: ${errorCode})`;
+            generalErrorElement.style.display = 'block';
+        } else {
+            alert(`Google Sign-In Failed: ${errorMessage} (Code: ${errorCode})`);
+        }
+    }
+}
+
+
+export { handleSignUp, handleLogin, handleLogout, handleGoogleSignIn };

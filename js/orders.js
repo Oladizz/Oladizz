@@ -26,15 +26,42 @@ async function placeOrder() {
     // 3. Prepare order details
     const userId = user.uid;
     const totalPrice = getCartTotal();
+
+    // Collect shipping address data
+    const customerName = document.getElementById('customer-name')?.value.trim();
+    const shippingAddress1 = document.getElementById('shipping-address1')?.value.trim();
+    const shippingAddress2 = document.getElementById('shipping-address2')?.value.trim(); // Optional
+    const shippingCity = document.getElementById('shipping-city')?.value.trim();
+    const shippingState = document.getElementById('shipping-state')?.value.trim();
+    const shippingZip = document.getElementById('shipping-zip')?.value.trim();
+    const shippingCountry = document.getElementById('shipping-country')?.value.trim();
+
+    // Basic validation (though form validation should handle most of this)
+    if (!customerName || !shippingAddress1 || !shippingCity || !shippingState || !shippingZip || !shippingCountry) {
+        alert("Please fill out all required shipping address fields.");
+        // Re-enable button if it was disabled by app.js
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        if (placeOrderBtn) placeOrderBtn.disabled = false;
+        return;
+    }
     
-    // Ensure items are deep copied if they are complex objects (though getCartItems() should return a fresh array)
-    // For this structure, cartItems from getCartItems() is already a suitable copy.
+    const shippingAddress = {
+        name: customerName,
+        address1: shippingAddress1,
+        address2: shippingAddress2,
+        city: shippingCity,
+        state: shippingState,
+        zip: shippingZip,
+        country: shippingCountry
+    };
+    
     const orderDetails = {
         userId: userId,
-        items: cartItems, // This is an array of objects from LocalStorage
+        items: cartItems, 
         totalPrice: totalPrice,
-        timestamp: serverTimestamp(), // Use Firestore server timestamp
-        orderStatus: 'pending' // Default order status
+        shippingAddress: shippingAddress, // Added shipping address
+        timestamp: serverTimestamp(), 
+        orderStatus: 'pending' 
     };
 
     // 4. Add order to Firestore

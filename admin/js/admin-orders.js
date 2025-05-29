@@ -160,21 +160,41 @@ async function showOrderItemsModal(orderId) {
 
         if (docSnap.exists()) {
             const order = docSnap.data();
+            let modalHtml = '';
+
+            // Display Shipping Address
+            if (order.shippingAddress) {
+                modalHtml += `
+                    <h4>Shipping Address:</h4>
+                    <p style="margin-bottom: 15px;">
+                        ${order.shippingAddress.name}<br>
+                        ${order.shippingAddress.address1}<br>
+                        ${order.shippingAddress.address2 ? order.shippingAddress.address2 + '<br>' : ''}
+                        ${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zip}<br>
+                        ${order.shippingAddress.country}
+                    </p>
+                    <hr style="margin: 15px 0;">
+                `;
+            } else {
+                modalHtml += '<p>Shipping address not available for this order.</p><hr style="margin: 15px 0;">';
+            }
+
+            // Display Items
             if (order.items && order.items.length > 0) {
-                let itemsHtml = `<h4>Items for Order ID: ${orderId}</h4><ul>`;
+                modalHtml += `<h4>Items for Order ID: ${orderId}</h4><ul>`;
                 order.items.forEach(item => {
-                    itemsHtml += `
+                    modalHtml += `
                         <li>
                             ${item.name} (ID: ${item.productId || item.id || 'N/A'}) - 
                             Quantity: ${item.quantity} - 
                             Price: $${Number(item.price).toFixed(2)} each
                         </li>`;
                 });
-                itemsHtml += `</ul>`;
-                orderItemsModalContent.innerHTML = itemsHtml;
+                modalHtml += `</ul>`;
             } else {
-                orderItemsModalContent.innerHTML = '<p>No items found for this order.</p>';
+                modalHtml += '<p>No items found for this order.</p>';
             }
+            orderItemsModalContent.innerHTML = modalHtml;
         } else {
             orderItemsModalContent.innerHTML = '<p>Order details not found.</p>';
         }

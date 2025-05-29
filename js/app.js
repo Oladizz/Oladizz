@@ -28,168 +28,197 @@ const setAdminClaimCallable = httpsCallable(functions, 'setAdminClaim');
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed');
-
-    // --- Initialize Cart Count Display ---
-    updateCartCountDisplay(); 
-
-    // --- Auth Form Listeners (Signup, Login, Logout) ---
-    const signupForm = document.getElementById('signup-form');
-    if (signupForm) {
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            if (email && password) await handleSignUp(email, password);
-            else {
-                const el = document.getElementById('signup-error');
-                if (el) el.textContent = "Email and password are required.";
-            }
-        });
-    }
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            if (email && password) await handleLogin(email, password);
-            else {
-                const el = document.getElementById('login-error');
-                if (el) el.textContent = "Email and password are required.";
-            }
-        });
-    }
-    // General logout link for main site
-    const logoutButton = document.getElementById('logout-link');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', async (e) => {
-            e.preventDefault();
-            await handleLogout();
-        });
-    }
-    // Specific logout link for admin panel header
-    const adminLogoutButton = document.getElementById('admin-logout-link');
-    if (adminLogoutButton) {
-        adminLogoutButton.addEventListener('click', async (e) => {
-            e.preventDefault();
-            await handleLogout(); 
-        });
+    const loginErrorDebugForOuter = document.getElementById('login-error'); 
+    if (loginErrorDebugForOuter) {
+        loginErrorDebugForOuter.textContent = 'JS DOMContentLoaded fired. app.js is running.';
+        loginErrorDebugForOuter.style.display = 'block';
+        loginErrorDebugForOuter.style.color = 'blue'; 
+    } else {
+        console.log('app.js DOMContentLoaded fired (outer), not on login page for debug.');
     }
 
+    try {
+        console.log('DOM fully loaded and parsed - inside try block');
 
-    // --- Page Specific Logic ---
-    // --- Page Specific Logic ---
-    // --- Page Specific Logic ---
-    const pagePath = window.location.pathname;
-    const featuredProductListContainer = document.getElementById('featured-product-list');
-    const homeCategoryListContainer = document.getElementById('home-category-list');
-    const categoryFilterListContainer = document.getElementById('category-filter-list'); // Added
+        // --- Initialize Cart Count Display ---
+        updateCartCountDisplay(); 
 
-    if (pagePath.endsWith("index.html") || pagePath === "/") { 
-        if (featuredProductListContainer) {
-            displayFeaturedProducts();
-        }
-        if (homeCategoryListContainer) { 
-            displayHomepageCategories();
-        }
-    } else if (pagePath.endsWith("products.html") && !pagePath.includes("admin/")) {
-        renderProductListPage();
-        if (categoryFilterListContainer) { // Added
-            displayCategoryFilters();
-        }
-    } else if (pagePath.endsWith("product-detail.html")) {
-        renderProductDetailPage();
-    } else if (pagePath.endsWith("cart.html")) {
-        renderCartPage();
-        document.addEventListener('cartUpdated', renderCartPage);
-    } else if (pagePath.endsWith("checkout.html")) {
-        renderCheckoutPage();
-    } else if (pagePath.endsWith("order_confirmation.html")) {
-        renderOrderConfirmationPage();
-    } else if (pagePath.endsWith("admin.html") && !pagePath.includes("admin/")) { // Root admin.html
-        handleRootAdminPageAccess(); 
-        setupAdminFormListener(); 
-    } else if (pagePath.startsWith("/admin/")) { // For pages within admin/ directory
-        // This is the guard for all pages under /admin/ (e.g., /admin/dashboard.html)
-        firebaseAuth.onAuthStateChanged(async user => { 
-            if (user) {
-                const idTokenResult = await user.getIdTokenResult(true); // Force refresh for claims
-                if (idTokenResult.claims.isAdmin === true) {
-                    console.log("Admin user confirmed for /admin/ page:", pagePath);
-                    // Update admin user email in the admin panel header
-                    const adminUserEmailElement = document.getElementById('admin-user-email');
-                    if (adminUserEmailElement) {
-                        adminUserEmailElement.textContent = user.email;
-                    }
-                    // If specific page rendering functions for admin pages are needed, call them here
-                    // For example, if on admin/products.html, call an adminRenderProductPage()
-                } else {
-                    // User is logged in but NOT an admin
-                    console.warn("Access Denied: Non-admin user attempting to access /admin/ page. Redirecting to main site homepage.");
-                    alert("Access Denied. You are not authorized to view this page.");
-                    window.location.href = '../index.html'; // Redirect to main site home
+        // --- Auth Form Listeners (Signup, Login, Logout) ---
+        const signupForm = document.getElementById('signup-form');
+        if (signupForm) {
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                if (email && password) await handleSignUp(email, password);
+                else {
+                    const el = document.getElementById('signup-error');
+                    if (el) el.textContent = "Email and password are required.";
                 }
-            } else {
-                // No user is logged in
-                console.warn("Access Denied: No user logged in. Redirecting from /admin/ page to login.");
-                // Redirect to login, and then after login, onAuthStateChanged in auth.js will handle further redirection.
-                // If they log in as non-admin, the check above will then redirect them to index.html.
-                // If they log in as admin, they will be allowed (or redirected to admin dashboard by root admin.html logic).
-                window.location.href = `../login.html?redirect=${encodeURIComponent(window.location.href)}`; 
+            });
+        }
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                if (email && password) await handleLogin(email, password);
+                else {
+                    const el = document.getElementById('login-error');
+                    if (el) el.textContent = "Email and password are required.";
+                }
+            });
+        }
+        // General logout link for main site
+        const logoutButton = document.getElementById('logout-link');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await handleLogout();
+            });
+        }
+        // Specific logout link for admin panel header
+        const adminLogoutButton = document.getElementById('admin-logout-link');
+        if (adminLogoutButton) {
+            adminLogoutButton.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await handleLogout(); 
+            });
+        }
+
+
+        // --- Page Specific Logic ---
+        const pagePath = window.location.pathname;
+        const featuredProductListContainer = document.getElementById('featured-product-list');
+        const homeCategoryListContainer = document.getElementById('home-category-list');
+        const categoryFilterListContainer = document.getElementById('category-filter-list'); 
+
+        if (pagePath.endsWith("index.html") || pagePath === "/") { 
+            if (featuredProductListContainer) {
+                displayFeaturedProducts();
+            }
+            if (homeCategoryListContainer) { 
+                displayHomepageCategories();
+            }
+        } else if (pagePath.endsWith("products.html") && !pagePath.includes("admin/")) {
+            renderProductListPage();
+            if (categoryFilterListContainer) { 
+                displayCategoryFilters();
+            }
+        } else if (pagePath.endsWith("product-detail.html")) {
+            renderProductDetailPage();
+        } else if (pagePath.endsWith("cart.html")) {
+            renderCartPage();
+            document.addEventListener('cartUpdated', renderCartPage);
+        } else if (pagePath.endsWith("checkout.html")) {
+            renderCheckoutPage();
+        } else if (pagePath.endsWith("order_confirmation.html")) {
+            renderOrderConfirmationPage();
+        } else if (pagePath.endsWith("admin.html") && !pagePath.includes("admin/")) { 
+            handleRootAdminPageAccess(); 
+            setupAdminFormListener(); 
+        } else if (pagePath.startsWith("/admin/")) { 
+            firebaseAuth.onAuthStateChanged(async user => { 
+                if (user) {
+                    const idTokenResult = await user.getIdTokenResult(true); 
+                    if (idTokenResult.claims.isAdmin === true) {
+                        console.log("Admin user confirmed for /admin/ page:", pagePath);
+                        const adminUserEmailElement = document.getElementById('admin-user-email');
+                        if (adminUserEmailElement) {
+                            adminUserEmailElement.textContent = user.email;
+                        }
+                    } else {
+                        console.warn("Access Denied: Non-admin user attempting to access /admin/ page. Redirecting to main site homepage.");
+                        alert("Access Denied. You are not authorized to view this page.");
+                        window.location.href = '../index.html'; 
+                    }
+                } else {
+                    console.warn("Access Denied: No user logged in. Redirecting from /admin/ page to login.");
+                    window.location.href = `../login.html?redirect=${encodeURIComponent(window.location.href)}`; 
+                }
+            });
+        }
+
+
+        // --- Event Delegation for "Add to Cart" buttons ---
+        document.body.addEventListener('click', async (event) => {
+            if (event.target && event.target.classList.contains('add-to-cart-btn')) {
+                const button = event.target;
+                const productId = button.dataset.productId;
+                let quantity = 1;
+                const quantityInput = document.getElementById('quantity'); 
+                if (quantityInput && (window.location.pathname.includes("product-detail.html") || button.closest('#product-detail-content'))) {
+                    quantity = parseInt(quantityInput.value, 10) || 1;
+                }
+                if (productId) {
+                    button.textContent = "Adding..."; button.disabled = true;
+                    await addToCart(productId, quantity);
+                    button.textContent = "Add to Cart"; button.disabled = false;
+                }
             }
         });
-    }
 
+        // --- Search Form Listener ---
+        const searchForm = document.getElementById('search-form');
+        if (searchForm) {
+            searchForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const searchInput = document.getElementById('search-input');
+                const query = searchInput.value.trim();
+                
+                const currentUrlParams = new URLSearchParams(window.location.search);
+                if (query) {
+                    currentUrlParams.set('search', query);
+                } else {
+                    currentUrlParams.delete('search');
+                }
+                window.location.href = `products.html?${currentUrlParams.toString()}`;
+            });
+        }
 
-    // --- Event Delegation for "Add to Cart" buttons ---
-    document.body.addEventListener('click', async (event) => {
-        if (event.target && event.target.classList.contains('add-to-cart-btn')) {
-            const button = event.target;
-            const productId = button.dataset.productId;
-            let quantity = 1;
-            const quantityInput = document.getElementById('quantity'); 
-            if (quantityInput && (window.location.pathname.includes("product-detail.html") || button.closest('#product-detail-content'))) {
-                quantity = parseInt(quantityInput.value, 10) || 1;
-            }
-            if (productId) {
-                button.textContent = "Adding..."; button.disabled = true;
-                await addToCart(productId, quantity);
-                button.textContent = "Add to Cart"; button.disabled = false;
+        // --- Price Filter & Sort Listeners (only on products.html) ---
+        if (pagePath.endsWith("products.html")) {
+            setupProductPageListeners(); 
+        }
+
+        // --- Initialize Carousel (only on index.html) ---
+        if (pagePath.endsWith("index.html") || pagePath === "/") {
+            const carouselElement = document.getElementById('promotion-carousel');
+            if (carouselElement) {
+                initCarousel('promotion-carousel');
             }
         }
-    });
 
-    // --- Search Form Listener ---
-    const searchForm = document.getElementById('search-form');
-    if (searchForm) {
-        searchForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const searchInput = document.getElementById('search-input');
-            const query = searchInput.value.trim();
-            
-            const currentUrlParams = new URLSearchParams(window.location.search);
-            if (query) {
-                currentUrlParams.set('search', query);
-            } else {
-                currentUrlParams.delete('search');
-            }
-            // Preserve other existing filters like category, min_price, max_price, sort_by
-            window.location.href = `products.html?${currentUrlParams.toString()}`;
-        });
-    }
+        // --- Mobile Menu Toggle ---
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mainNavLinks = document.getElementById('main-nav-links');
 
-    // --- Price Filter & Sort Listeners (only on products.html) ---
-    if (pagePath.endsWith("products.html")) {
-        setupProductPageListeners(); 
-    }
-
-    // --- Initialize Carousel (only on index.html) ---
-    if (pagePath.endsWith("index.html") || pagePath === "/") {
-        const carouselElement = document.getElementById('promotion-carousel');
-        if (carouselElement) {
-            initCarousel('promotion-carousel');
+        if (mobileMenuToggle && mainNavLinks) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mainNavLinks.classList.toggle('nav-open');
+                const isExpanded = mainNavLinks.classList.contains('nav-open');
+                mobileMenuToggle.setAttribute('aria-expanded', isExpanded);
+            });
         }
+
+        // At the end of the try block, if on login page, change message:
+        if (loginErrorDebugForOuter) {
+             loginErrorDebugForOuter.textContent = 'app.js initial setup complete (no errors in try block).';
+             loginErrorDebugForOuter.style.color = 'green';
+        }
+
+    } catch (e) {
+        // If ANY error occurs during initial setup, display it
+        if (loginErrorDebugForOuter) {
+            loginErrorDebugForOuter.textContent = `ERROR in app.js setup: ${e.name} - ${e.message}`;
+            loginErrorDebugForOuter.style.color = 'red';
+            loginErrorDebugForOuter.style.display = 'block';
+        } else {
+            // Fallback for other pages or if login-error itself is an issue
+            alert(`Critical JS Error: ${e.name} - ${e.message}`);
+        }
+        console.error("Critical error in app.js DOMContentLoaded:", e);
     }
 });
 
@@ -507,15 +536,25 @@ function renderCartPage() {
 
 // --- Checkout Page (checkout.html) ---
 function renderCheckoutPage() {
-    const checkoutFormContainer = document.getElementById('checkout-form-container'); 
-    if (!checkoutFormContainer) return;
+    // The main form container is now #checkout-process-form, which includes shipping.
+    // We only need to populate the summary section.
+    const orderSummaryContainer = document.getElementById('checkout-order-summary-container'); 
+    const mainCheckoutContainer = document.getElementById('checkout-form-container'); // Parent container
+    const orderSummaryContainer = document.getElementById('checkout-order-summary-container'); 
+    const mainCheckoutContainer = document.getElementById('checkout-form-container'); 
+    const placeOrderBtn = document.getElementById('place-order-btn'); 
+    const checkoutForm = document.getElementById('checkout-process-form'); // Get the form
+
+    if (!orderSummaryContainer || !mainCheckoutContainer || !checkoutForm) {
+        console.warn("Checkout summary, main container, or form not found on page.");
+        return;
+    }
 
     const cartItems = getCartItems();
     const cartTotal = getCartTotal();
 
     if (cartItems.length === 0) {
-        checkoutFormContainer.innerHTML = '<p>Your cart is empty. Add items to your cart to proceed to checkout.</p>';
-        const placeOrderBtn = document.getElementById('place-order-btn'); 
+        mainCheckoutContainer.innerHTML = '<p>Your cart is empty. Add items to your cart to proceed to checkout.</p>';
         if (placeOrderBtn) placeOrderBtn.style.display = 'none';
         return;
     }
@@ -525,20 +564,30 @@ function renderCheckoutPage() {
         summaryHtml += `<li>${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}</li>`;
     });
     summaryHtml += `</ul><p class="checkout-total"><strong>Grand Total: $${cartTotal.toFixed(2)}</strong></p>`;
-    checkoutFormContainer.innerHTML = summaryHtml; 
+    
+    orderSummaryContainer.innerHTML = summaryHtml; 
 
-    const placeOrderBtn = document.getElementById('place-order-btn'); 
     if (placeOrderBtn) {
         placeOrderBtn.style.display = 'block'; 
         if (!placeOrderBtn.dataset.listenerAttached) { 
             placeOrderBtn.addEventListener('click', async () => {
+                // Validate the form first
+                if (!checkoutForm.checkValidity()) {
+                    // checkoutForm.reportValidity(); // Shows browser default error bubbles
+                    alert("Please fill out all required shipping address fields correctly.");
+                    // Optionally, find the first invalid field and focus it.
+                    // Example: checkoutForm.querySelector(':invalid')?.focus();
+                    return; 
+                }
+
                 placeOrderBtn.textContent = 'Placing Order...';
                 placeOrderBtn.disabled = true;
                 try {
+                    // placeOrder() in orders.js will now read the form values directly
                     await placeOrder(); 
                 } catch (error) {
                     console.error("Error during placeOrder call from app.js:", error);
-                    alert("An unexpected error occurred. Please try again.");
+                    alert(`An unexpected error occurred: ${error.message}. Please try again.`);
                     placeOrderBtn.textContent = 'Place Order';
                     placeOrderBtn.disabled = false;
                 }

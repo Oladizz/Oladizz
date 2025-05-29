@@ -63,6 +63,14 @@ service cloud.firestore {
                        request.resource.data.userId == request.auth.uid &&
                        request.resource.data.items is list && size(request.resource.data.items) > 0 &&
                        request.resource.data.totalPrice is number && request.resource.data.totalPrice > 0 &&
+                       request.resource.data.shippingAddress is map &&
+                       request.resource.data.shippingAddress.name is string && request.resource.data.shippingAddress.name.size() > 0 &&
+                       request.resource.data.shippingAddress.address1 is string && request.resource.data.shippingAddress.address1.size() > 0 &&
+                       (request.resource.data.shippingAddress.address2 == null || request.resource.data.shippingAddress.address2 is string) && // Optional
+                       request.resource.data.shippingAddress.city is string && request.resource.data.shippingAddress.city.size() > 0 &&
+                       request.resource.data.shippingAddress.state is string && request.resource.data.shippingAddress.state.size() > 0 &&
+                       request.resource.data.shippingAddress.zip is string && request.resource.data.shippingAddress.zip.size() > 0 &&
+                       request.resource.data.shippingAddress.country is string && request.resource.data.shippingAddress.country.size() > 0 &&
                        request.resource.data.orderStatus == 'pending' && // Initial status must be pending
                        request.resource.data.timestamp == request.time; // Enforce server timestamp
 

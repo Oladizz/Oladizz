@@ -20,12 +20,13 @@
 
 body { 
     font-family: var(--font-family-sans-serif);
-    line-height: 1.6; 
+    line-height: 1.7; /* Updated line-height */
     background-color: var(--light-color);
     color: var(--dark-color);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding-top: 70px; /* Added padding for fixed header, adjust value as needed */
 }
 
 .container { 
@@ -53,9 +54,9 @@ a:hover {
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem; /* Updated margin */
     font-weight: 500;
-    line-height: 1.2;
+    line-height: 1.2; /* Keep line-height for headings tighter */
     color: var(--dark-color); /* Or a slightly darker shade */
 }
 h1 { font-size: 2.25rem; }
@@ -66,46 +67,72 @@ h3 { font-size: 1.5rem; }
 header {
     background: var(--dark-color);
     color: var(--white-color);
-    padding: 1rem 0;
+    padding: 1rem 0; /* This padding will affect the inner container */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed; /* Fixed header */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure header is above other content */
 }
 header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: 0; /* Remove padding if header itself has padding */
+    padding-bottom: 0; /* Remove padding if header itself has padding */
+    /* Height can be implicitly defined by content or explicitly set */
+    /* min-height: 70px; /* Example: ensure header has a minimum height */
 }
-header h1 a { /* Store Name / Logo */
+header h1 a { 
     color: var(--white-color);
     text-transform: uppercase;
-    font-size: 1.5rem; /* Slightly larger */
+    font-size: 1.5rem; 
     font-weight: bold;
 }
 header h1 a:hover {
     text-decoration: none;
     color: var(--primary-color);
 }
-header nav ul { 
-    list-style: none; 
-    display: flex; /* Use flex for nav items */
-    align-items: center;
-}
-header nav ul li { 
-    margin-left: 20px; /* Spacing between nav items */
-}
-header nav ul li a {
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: none; /* Hidden by default, shown in media query */
+    background: none;
     color: var(--white-color);
-    padding: 0.5rem 0; /* Better touch targets */
-    transition: color 0.2s ease-in-out;
+    border: none;
+    font-size: 1.8rem; /* Hamburger icon size */
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-left: 10px; /* Space from other elements if any */
 }
-header nav ul li a:hover,
-header nav ul li a.active { /* For active page link if implemented */
+
+/* Navigation Links List */
+#main-nav-links { 
+    list-style: none; 
+    display: flex; 
+    align-items: center;
+    margin: 0; /* Reset margin */
+    padding: 0; /* Reset padding */
+}
+#main-nav-links li { 
+    margin-left: 20px; 
+}
+#main-nav-links li a {
+    color: var(--white-color);
+    padding: 0.5rem 0; 
+    transition: color 0.2s ease-in-out;
+    text-decoration: none; /* Ensure no underline by default */
+}
+#main-nav-links li a:hover,
+#main-nav-links li a.active { 
     color: var(--primary-color);
     text-decoration: none;
 }
-#user-email { /* User email display in nav */
-    color: var(--light-color); /* Lighter color for user email */
+
+/* User Email and Cart Count - ensure they are part of the flex row */
+#user-email { 
+    color: var(--light-color); 
     font-size: 0.9rem;
     margin-left: 10px;
 }
@@ -116,6 +143,13 @@ header nav ul li a.active { /* For active page link if implemented */
     border-radius: 50%;
     font-size: 0.8rem;
     margin-left: 4px;
+}
+
+/* Search Form in Header - ensure it's part of the flex row */
+#search-form {
+    display: flex; /* Already has inline style, but good to have here */
+    align-items: center;
+    margin-left: 20px; /* Inline style */
 }
 
 
@@ -136,7 +170,7 @@ footer {
     padding: 0.6rem 1.2rem; /* Adjusted padding */
     text-decoration: none;
     border: none;
-    border-radius: 0.25rem; /* Standardized border-radius */
+    border-radius: 0.5rem; /* Updated border-radius */
     cursor: pointer;
     font-size: 1rem;
     text-align: center;
@@ -154,6 +188,26 @@ footer {
     cursor: not-allowed;
     box-shadow: none;
 }
+
+/* Social Sign-in Buttons */
+.social-signin-btn {
+    width: 100%; /* Or auto if preferred */
+    margin-top: 10px;
+    padding: 0.6rem 1.2rem; /* Match other buttons */
+    display: flex; /* For icon alignment if added */
+    align-items: center;
+    justify-content: center;
+}
+.google-btn {
+    background-color: #DB4437; /* Google's red */
+    color: white;
+}
+.google-btn:hover {
+    background-color: #C33D2E; /* Darker Google red */
+    color: white; /* Ensure text color remains white on hover */
+}
+/* Optional: .google-btn img { margin-right: 8px; width: 18px; height: 18px; } */
+
 
 /* Error Messages */
 .error-message {
@@ -244,20 +298,20 @@ form button[type="submit"]:hover {
     margin-top: 20px;
 }
 .product-card {
-    border: 1px solid #e9ecef; /* Softer border */
-    border-radius: 0.3rem; /* Slightly more rounded */
+    border: 1px solid #e9ecef; 
+    border-radius: 0.5rem; /* Updated border-radius */
     padding: 1rem;
     text-align: center;
     background-color: var(--white-color);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Softer shadow */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Updated box-shadow */
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     display: flex;
-    flex-direction: column; /* Align items vertically */
-    justify-content: space-between; /* Push button to bottom */
+    flex-direction: column; 
+    justify-content: space-between; 
 }
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Updated hover box-shadow */
 }
 .product-card img {
     max-width: 100%;
@@ -573,34 +627,66 @@ p.checkout-total {
 
 @media (max-width: 768px) {
     header .container {
+        flex-wrap: wrap; /* Allow items to wrap for mobile, especially search form */
+        /* justify-content: space-between; /* Re-evaluate if needed */
+    }
+
+    .mobile-menu-btn {
+        display: block; /* Show hamburger button */
+        order: 1; /* Place it after logo if logo is order 0 */
+    }
+
+    header h1 { /* Logo */
+        order: 0; /* Ensure logo comes first */
+        /* margin-bottom: 0; /* Adjust if needed for vertical alignment */
+    }
+    
+    #search-form {
+        order: 2; /* Place search form after hamburger */
+        margin-left: auto; /* Push to right if space allows, or manage with flex-grow on logo */
+        /* Or hide it completely if too cluttered: display: none; */
+    }
+
+    #main-nav-links {
+        display: none; /* Hide nav links by default on mobile */
         flex-direction: column;
-        align-items: center; /* Center items in column */
-    }
-    header h1 {
-        margin-bottom: 0.5rem;
-    }
-    header nav ul {
-        flex-direction: column; /* Stack nav items */
         width: 100%;
-        align-items: center; /* Center nav items */
+        position: absolute; /* For dropdown effect */
+        top: 100%; /* Position below the header (assuming header height is consistent) */
+        left: 0;
+        background-color: var(--dark-color); /* Match header background */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1rem 0; /* Padding for the dropdown container */
+        order: 3; /* Ensure it's below logo and toggle button in source, but visually appears as dropdown */
     }
-    header nav ul li {
+    #main-nav-links.nav-open {
+        display: flex; /* Show when active */
+    }
+    #main-nav-links li {
         margin-left: 0;
-        margin-bottom: 0.5rem; /* Space between stacked items */
         width: 100%;
         text-align: center;
     }
-    header nav ul li a {
-        display: block; /* Make links full width for easier tapping */
-        padding: 0.5rem;
+    #main-nav-links li a {
+        display: block;
+        padding: 0.75rem 1rem; /* Larger tap targets */
+        border-bottom: 1px solid rgba(255,255,255,0.1); /* Separator for links */
     }
+    #main-nav-links li:last-child a {
+        border-bottom: none;
+    }
+    /* User email display within mobile nav */
     #user-email {
-        margin-left: 0;
-        margin-top: 0.5rem;
+        display: block;
+        text-align: center;
+        padding: 0.75rem 1rem;
+        color: var(--secondary-color); /* Different color to distinguish */
+        font-size: 0.9rem;
     }
 
+
     #product-list {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Even smaller cards */
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
         gap: 15px;
     }
     .product-card img {
@@ -758,6 +844,11 @@ a.category-card:hover {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     color: var(--primary-color, #007bff); 
     text-decoration: none; /* Ensure no underline on hover */
+}
+
+/* Paragraph default margin */
+p {
+    margin-bottom: 1rem; /* Added default paragraph margin */
 }
 
 /* Homepage Carousel Styling */
