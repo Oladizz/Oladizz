@@ -17,6 +17,7 @@
                     <li><a href="dashboard.html">Dashboard</a></li>
                     <li><a href="products.html" class="active">Products</a></li>
                     <li><a href="orders.html">Orders</a></li>
+                    <li><a href="categories.html">Categories</a></li>
                     <li><a href="users.html">Users</a></li>
                     <li><a href="income.html">Income</a></li>
                     <li><a href="statistics.html">Statistics</a></li>
@@ -57,8 +58,19 @@
                             <input type="url" id="product-image-url" name="product-image-url" required>
                         </div>
                         <div>
+                            <label for="product-category">Product Category:</label>
+                            <select id="product-category" name="product-category" required>
+                                <option value="">Select Category</option>
+                                <!-- Categories will be loaded here by JavaScript -->
+                            </select>
+                        </div>
+                        <div>
                             <label for="product-stock">Stock Quantity:</label>
                             <input type="number" id="product-stock" name="product-stock" min="0" step="1" required>
+                        </div>
+                        <div>
+                            <label for="product-isFeatured" style="display: inline-block; margin-right: 10px;">Mark as Featured Product:</label>
+                            <input type="checkbox" id="product-isFeatured" name="product-isFeatured" style="width: auto; vertical-align: middle;">
                         </div>
                         <button type="submit" class="button">Add Product</button>
                         <button type="button" class="button cancel-edit-btn" style="background-color: var(--admin-secondary-color, #6c757d); display: none;">Cancel Edit</button>
@@ -68,7 +80,7 @@
 
                 <div class="admin-card" style="margin-top: 30px;">
                     <h3>Existing Products</h3>
-                    <div id="admin-product-list-container">
+                    <div id="admin-product-list-container" class="admin-table-responsive-wrapper">
                         <table class="admin-table">
                             <thead>
                                 <tr>
@@ -76,13 +88,15 @@
                                     <th>Name</th>
                                     <th>Price</th>
                                     <th>Stock</th>
+                                    <th>Category</th>
+                                    <th>Featured?</th>
                                     <th>Description</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-products-table-body">
                                 <!-- Products will be loaded here by JavaScript -->
-                                <tr><td colspan="6">Loading products...</td></tr>
+                                <tr><td colspan="8">Loading products...</td></tr>
                             </tbody>
                         </table>
                     </div>

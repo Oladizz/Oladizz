@@ -1,10 +1,10 @@
 /* Global Styles & Variables */
 :root {
-    --primary-color: #007bff;
+    --primary-color: #28a745; /* Changed to green */
     --secondary-color: #6c757d;
-    --success-color: #28a745;
+    --success-color: #28a745; /* Unified with new primary for now */
     --danger-color: #dc3545;
-    --light-color: #f8f9fa;
+    --light-color: #ffffff; /* Changed to pure white */
     --dark-color: #343a40;
     --white-color: #ffffff;
     --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -48,7 +48,7 @@ a {
 }
 a:hover {
     text-decoration: underline;
-    color: darken(var(--primary-color), 10%);
+    color: #218838; /* Darker green for hover, original: darken(var(--primary-color), 10%) */
 }
 
 /* Headings */
@@ -144,7 +144,7 @@ footer {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .button:hover, button:hover {
-    background: darken(var(--primary-color), 10%); /* Darken on hover */
+    background: #218838; /* Darker green for hover, original: darken(var(--primary-color), 10%) */
     text-decoration: none; /* No underline on button hover */
     color: var(--white-color);
     box-shadow: 0 2px 5px rgba(0,0,0,0.15);
@@ -213,16 +213,16 @@ form input[type="number"]:focus,
 form textarea:focus {
     border-color: var(--primary-color);
     outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); /* Focus ring */
+    box-shadow: 0 0 0 0.2rem rgba(40,167,69,.25); /* Focus ring adjusted to new primary green */
 }
 form button[type="submit"] { /* Specific styling for submit buttons in forms */
-    background-color: var(--success-color); /* Green for submit */
+    background-color: var(--primary-color); /* Now uses the new primary green */
     width: 100%; /* Full width */
     padding: 0.75rem;
     font-size: 1.1rem;
 }
 form button[type="submit"]:hover {
-    background-color: darken(var(--success-color), 10%);
+    background-color: #218838; /* Darker green for hover, original: darken(var(--success-color), 10%) */
 }
 
 /* Centered form container for login/signup */
@@ -290,7 +290,7 @@ form button[type="submit"]:hover {
     width: auto; /* Not full width */
 }
 .product-card .add-to-cart-btn:hover {
-    background-color: darken(var(--primary-color), 10%);
+    background-color: #218838; /* Darker green for hover */
 }
 
 
@@ -346,13 +346,79 @@ form button[type="submit"]:hover {
     text-align: center;
 }
 #product-detail-content .add-to-cart-btn { 
-    background-color: var(--success-color); /* Green for add to cart */
+    background-color: var(--primary-color); /* Now uses the new primary green */
     /* Other styles inherited */
     padding: 0.75rem 1.5rem; /* Larger button */
     font-size: 1.1rem;
 }
 #product-detail-content .add-to-cart-btn:hover {
-    background-color: darken(var(--success-color), 10%);
+    background-color: #218838; /* Darker green for hover */
+}
+
+/* Stock Status Display (Product Detail Page) */
+.stock-status {
+    margin-bottom: 1rem; /* Consistent with other stylings */
+    font-weight: bold;
+    font-size: 1rem; 
+}
+
+.low-stock {
+    color: #FFA500; /* Orange */
+}
+
+.out-of-stock {
+    color: var(--danger-color, #dc3545); 
+}
+
+.unavailable-stock {
+    color: var(--secondary-color, #6c757d); 
+    font-style: italic;
+}
+
+/* Product Detail Page - Image Zoom Styling */
+.product-image-section-wrapper {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 20px; 
+    align-items: flex-start; 
+    /* margin-bottom: 1.5rem; /* Replaces margin on product-image-large directly */
+}
+
+.img-zoom-container { /* Wraps the main product image */
+    position: relative;
+    /* flex: 0 0 60%; /* Example: takes up 60% of the wrapper, adjust as needed */
+    /* max-width: 400px; /* Max width for the image container */
+}
+
+#product-detail-content .product-image-large { /* Style the image itself */
+    display: block;
+    max-width: 100%; /* Make image responsive within its container */
+    height: auto;
+    /* margin-bottom: 0; /* Margin now on product-image-section-wrapper or product-info-container */
+    /* border: 1px solid #eee; /* Kept for consistency */
+}
+
+.img-zoom-lens {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    /* width: 100px; /* Set by JS if not by CSS, but good to have a fallback */
+    /* height: 100px; /* Set by JS if not by CSS */
+    background-color: rgba(255,255,255,0.4); /* Slightly more visible lens */
+    cursor: crosshair;
+    display: none; /* Initially hidden, shown by JS */
+    z-index: 10; /* Ensure lens is above the image */
+}
+
+.img-zoom-result {
+    border: 1px solid #d4d4d4;
+    width: 300px;  /* Default width for the zoom pane */
+    height: 300px; /* Default height for the zoom pane */
+    background-repeat: no-repeat;
+    display: none; /* Initially hidden, shown by JS */
+    /* flex: 0 0 35%; /* Example: takes up space next to image, adjust as needed */
+    /* margin-left: 20px; /* If not using gap on wrapper */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
 }
 
 /* Cart Page Styling (cart.html) - Base from previous steps */
@@ -417,7 +483,7 @@ main.container a.button[href="checkout.html"] { /* Checkout button on cart page 
     font-size: 1.1rem;
 }
 main.container a.button[href="checkout.html"]:hover {
-    background-color: darken(var(--success-color), 10%);
+    background-color: #218838; /* Darker green for hover */
 }
 
 /* Checkout Page Styling (checkout.html) - Base from previous steps */
@@ -458,12 +524,12 @@ p.checkout-total {
     display: block; 
     width: fit-content;
     margin: 30px auto 10px auto; 
-    background-color: var(--success-color);
+    background-color: var(--primary-color); /* Now uses new primary green */
     padding: 0.75rem 2rem; /* Wider button */
     font-size: 1.2rem; 
 }
 #place-order-btn:hover {
-    background-color: darken(var(--success-color), 10%);
+    background-color: #218838; /* Darker green for hover */
 }
 
 /* Order Confirmation Page Styling (order_confirmation.html) - Base from previous steps */
@@ -654,4 +720,158 @@ p.checkout-total {
 .hero .button:hover {
     background-color: #e9ecef; /* Light gray */
     color: var(--primary-color);
+}
+
+/* Homepage Categories Section */
+#home-categories-section {
+    /* padding-top: 2rem; -- Handled by container + inline margin-top */
+    /* padding-bottom: 2rem; -- Handled by container */
+    text-align: center; 
+}
+
+#home-categories-section h2 {
+    margin-bottom: 1.5rem; /* Consistent with example */
+}
+
+.category-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem; /* From example, seems fine */
+}
+
+a.category-card { /* Styling the <a> tag directly */
+    display: block;
+    padding: 1.5rem 1rem; /* Increased padding for better click area */
+    background-color: var(--white-color, #fff);
+    border: 1px solid #e0e0e0;
+    border-radius: 0.25rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--dark-color, #343a40);
+    font-weight: 500; /* Make text slightly bolder */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: var(--primary-color, #007bff); 
+    text-decoration: none; /* Ensure no underline on hover */
+}
+
+/* Homepage Carousel Styling */
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    max-width: 100%; /* Full width of its parent container */
+    margin-bottom: 2rem; /* Space below the carousel */
+    /* background-color: #f0f0f0; /* Placeholder background if images are slow */
+}
+
+.carousel-slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* For potential future sliding effect */
+    /* For fade effect, this transform isn't strictly needed, but good for structure */
+}
+
+.carousel-slide {
+    min-width: 100%; /* Each slide takes full width of the container */
+    position: relative; /* For caption positioning */
+    display: none; /* Hide all slides by default */
+    /* transition: opacity 0.5s ease-in-out; /* For fade effect */
+}
+
+.carousel-slide.active-slide {
+    display: block; /* Show only the active slide */
+    /* opacity: 1; */
+}
+
+.carousel-slide img {
+    width: 100%;
+    display: block; /* Removes extra space below image */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 400px; /* Adjust as needed, e.g., 400px or 500px */
+    object-fit: cover; /* Cover the area, might crop */
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 30px; /* Adjust spacing from bottom */
+    left: 30px;   /* Adjust spacing from left */
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    color: var(--white-color, #fff);
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 50%; /* Prevent caption from being too wide */
+}
+
+.carousel-caption h2 {
+    font-size: 1.8rem; /* Adjust as needed */
+    margin-bottom: 0.5rem;
+    color: var(--white-color, #fff); /* Ensure heading color is white */
+}
+
+.carousel-caption p {
+    font-size: 1rem; /* Adjust as needed */
+    margin-bottom: 1rem;
+}
+/* Ensure button within caption inherits button styles or has specific ones */
+.carousel-caption .button {
+    background-color: var(--primary-color); /* Example, can be customized */
+    color: var(--white-color);
+    padding: 0.5rem 1rem;
+}
+.carousel-caption .button:hover {
+    background-color: #218838; /* Darker green for hover */
+}
+
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: var(--white-color, #fff);
+    border: none;
+    padding: 12px 18px; /* Slightly larger padding */
+    cursor: pointer;
+    z-index: 10; /* Above slides */
+    font-size: 1.5rem; /* Larger arrows */
+    border-radius: 3px; /* Optional rounded corners */
+    transition: background-color 0.2s ease;
+}
+.carousel-control:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-control.prev {
+    left: 15px; /* Adjust spacing */
+}
+
+.carousel-control.next {
+    right: 15px; /* Adjust spacing */
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 15px; /* Adjust spacing */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    z-index: 10; /* Above slides */
+}
+
+.carousel-indicator {
+    width: 12px; /* Slightly larger dots */
+    height: 12px;
+    border-radius: 50%;
+    background-color: #bbb;
+    margin: 0 6px; /* Adjust spacing */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.carousel-indicator.active {
+    background-color: var(--primary-color, #007bff); /* Use primary color for active */
 }

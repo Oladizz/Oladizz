@@ -3,7 +3,8 @@ import {
     collection, 
     getDocs, 
     addDoc, 
-    doc, 
+    doc,
+    getDoc, // Make sure getDoc is imported
     updateDoc, 
     deleteDoc,
     serverTimestamp // For created/updated timestamps if desired
@@ -13,8 +14,41 @@ const productsTableBody = document.getElementById('admin-products-table-body');
 const addProductForm = document.getElementById('add-product-form');
 const formFeedback = document.getElementById('admin-product-form-feedback');
 const editProductIdInput = document.getElementById('edit-product-id');
-const formTitle = document.getElementById('admin-form-title'); // Assuming a title for the form section
+const formTitle = document.getElementById('admin-form-title'); 
+const productCategorySelect = document.getElementById('product-category');
+const productIsFeaturedCheckbox = document.getElementById('product-isFeatured'); // Added
 const submitButton = addProductForm ? addProductForm.querySelector('button[type="submit"]') : null;
+
+// --- Populate Category Dropdown ---
+async function populateCategoryDropdown() {
+    if (!productCategorySelect) {
+        console.warn("Product category select dropdown not found.");
+        return;
+    }
+    try {
+        const categoriesSnapshot = await getDocs(collection(db, "categories"));
+        // Clear existing options (except the first default one)
+        productCategorySelect.innerHTML = '<option value="">Select Category</option>'; 
+        
+        if (categoriesSnapshot.empty) {
+            console.warn("No categories found in Firestore.");
+            productCategorySelect.innerHTML += '<option value="" disabled>No categories available</option>';
+            return;
+        }
+        
+        categoriesSnapshot.forEach(doc => {
+            const category = doc.data();
+            const option = document.createElement('option');
+            option.value = doc.id;
+            option.textContent = category.name;
+            productCategorySelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Error populating category dropdown: ", error);
+        productCategorySelect.innerHTML += '<option value="" disabled>Error loading categories</option>';
+    }
+}
+
 
 // --- Display Products ---
 async function displayAdminProducts() {
@@ -22,12 +56,12 @@ async function displayAdminProducts() {
         console.log("Product table body not found on this page.");
         return;
     }
-    productsTableBody.innerHTML = '<tr><td colspan="6">Loading products...</td></tr>';
+    productsTableBody.innerHTML = '<tr><td colspan="8">Loading products...</td></tr>'; // Colspan to 8
 
     try {
         const querySnapshot = await getDocs(collection(db, "products"));
         if (querySnapshot.empty) {
-            productsTableBody.innerHTML = '<tr><td colspan="6">No products found. Add some!</td></tr>';
+            productsTableBody.innerHTML = '<tr><td colspan="8">No products found. Add some!</td></tr>'; // Colspan to 8
             return;
         }
 
@@ -41,6 +75,8 @@ async function displayAdminProducts() {
                     <td>${product.name}</td>
                     <td>$${Number(product.price).toFixed(2)}</td>
                     <td>${product.stock !== undefined ? product.stock : 'N/A'}</td>
+                    <td>${product.categoryName || product.categoryId || 'N/A'}</td> 
+                    <td>${product.isFeatured ? 'Yes' : 'No'}</td>
                     <td>${product.description ? (product.description.substring(0, 50) + (product.description.length > 50 ? '...' : '')) : 'No description'}</td>
                     <td>
                         <button class="action-btn edit-btn" data-id="${productId}">Edit</button>
@@ -61,7 +97,7 @@ async function displayAdminProducts() {
 
     } catch (error) {
         console.error("Error fetching products for admin: ", error);
-        productsTableBody.innerHTML = '<tr><td colspan="6">Error loading products. Check console.</td></tr>';
+        productsTableBody.innerHTML = '<tr><td colspan="8">Error loading products. Check console.</td></tr>'; // Colspan to 8
         if (formFeedback) formFeedback.textContent = "Error loading products.";
     }
 }
@@ -76,11 +112,16 @@ async function handleAddOrUpdateProduct(e) {
     const price = parseFloat(addProductForm.elements['product-price'].value);
     const imageUrl = addProductForm.elements['product-image-url'].value.trim();
     const stock = parseInt(addProductForm.elements['product-stock'].value, 10);
+    const categoryId = productCategorySelect ? productCategorySelect.value : ""; // Added
+    const categoryName = productCategorySelect && productCategorySelect.selectedIndex > 0 
+                         ? productCategorySelect.options[productCategorySelect.selectedIndex].text 
+                         : "";
+    const isFeatured = productIsFeaturedCheckbox ? productIsFeaturedCheckbox.checked : false; // Added
     const editingProductId = editProductIdInput.value;
 
     // Basic Validation
-    if (!name || !description || isNaN(price) || !imageUrl || isNaN(stock)) {
-        if (formFeedback) formFeedback.textContent = "Please fill all fields with valid data.";
+    if (!name || !description || isNaN(price) || !imageUrl || isNaN(stock) || !categoryId) { // Added categoryId validation
+        if (formFeedback) formFeedback.textContent = "Please fill all fields, including category, with valid data.";
         return;
     }
     if (price <= 0) {
@@ -98,6 +139,9 @@ async function handleAddOrUpdateProduct(e) {
         price,
         imageUrl,
         stock,
+        categoryId, 
+        categoryName, 
+        isFeatured, // Added
         // Can add timestamps if needed:
         // lastUpdated: serverTimestamp() 
     };
@@ -147,6 +191,12 @@ async function loadProductForEdit(productId) {
             addProductForm.elements['product-price'].value = product.price;
             addProductForm.elements['product-image-url'].value = product.imageUrl;
             addProductForm.elements['product-stock'].value = product.stock;
+            if (productCategorySelect && product.categoryId) { 
+                productCategorySelect.value = product.categoryId;
+            }
+            if (productIsFeaturedCheckbox) { // Added
+                productIsFeaturedCheckbox.checked = product.isFeatured || false;
+            }
             editProductIdInput.value = productId; // Set the hidden ID field
 
             if (formTitle) formTitle.textContent = "Edit Product";
@@ -184,6 +234,8 @@ async function handleDeleteProduct(productId) {
 function resetForm() {
     if (!addProductForm || !editProductIdInput || !formTitle || !submitButton) return;
     addProductForm.reset();
+    if (productCategorySelect) productCategorySelect.value = ""; 
+    if (productIsFeaturedCheckbox) productIsFeaturedCheckbox.checked = false; // Added
     editProductIdInput.value = ""; // Clear hidden ID
     if (formTitle) formTitle.textContent = "Add New Product"; // Reset title
     if (submitButton) submitButton.textContent = "Add Product"; // Reset button text
@@ -192,13 +244,11 @@ function resetForm() {
 
 
 // --- Initialize Page ---
-function initAdminProductsPage() {
+async function initAdminProductsPage() { // Added async
     // This function is called when the admin/products.html page loads
-    // It assumes that the user is already authenticated as an admin
-    // (which should be handled by the main app.js routing/auth checks)
-    
     console.log("Initializing Admin Products Page...");
-    displayAdminProducts();
+    await populateCategoryDropdown(); 
+    await displayAdminProducts(); 
 
     if (addProductForm) {
         addProductForm.addEventListener('submit', handleAddOrUpdateProduct);
@@ -217,10 +267,9 @@ function initAdminProductsPage() {
 }
 
 // Ensure this script runs after DOM is loaded and only on admin/products.html
-// We can use a specific ID on the body of admin/products.html or check path.
 if (window.location.pathname.endsWith('/admin/products.html')) {
     document.addEventListener('DOMContentLoaded', initAdminProductsPage);
 }
 
-export { displayAdminProducts, handleAddOrUpdateProduct, loadProductForEdit, handleDeleteProduct, resetForm };
+export { displayAdminProducts, handleAddOrUpdateProduct, loadProductForEdit, handleDeleteProduct, resetForm, populateCategoryDropdown };
 // Exporting for potential direct calls or testing, though initAdminProductsPage handles setup.

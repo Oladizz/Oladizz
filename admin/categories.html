@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Categories - Admin Panel</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <div class="logo">
+                <a href="dashboard.html">Admin Panel</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="orders.html">Orders</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="categories.html" class="active">Categories</a></li>
+                    <li><a href="income.html">Income</a></li>
+                    <li><a href="statistics.html">Statistics</a></li>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="../index.html">Exit Admin (View Site)</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="admin-main-content">
+            <header class="admin-header">
+                <h1>Manage Categories</h1>
+                <div class="user-info">
+                    <span id="admin-user-email"></span>
+                    <a href="#" id="admin-logout-link" style="color: var(--admin-accent-color);">Logout</a>
+                </div>
+            </header>
+            <section class="admin-page-content">
+                <h2>Category Management</h2>
+                <div class="admin-card">
+                    <h3 id="admin-category-form-title">Add New Category</h3>
+                    <form id="add-category-form" class="admin-form">
+                        <input type="hidden" id="edit-category-id">
+                        <div>
+                            <label for="category-name">Category Name</label>
+                            <input type="text" id="category-name" required>
+                        </div>
+                        <div>
+                            <label for="category-description">Description</label>
+                            <textarea id="category-description" rows="4"></textarea>
+                        </div>
+                        <button type="submit">Add Category</button>
+                        <button type="button" class="button cancel-edit-btn" style="display: none;">Cancel Edit</button>
+                        <p id="admin-category-form-feedback" class="feedback-message"></p>
+                    </form>
+                </div>
+
+                <div class="admin-card" style="margin-top: 30px;">
+                    <h3>Existing Categories</h3>
+                    <div id="admin-category-list-container" class="admin-table-responsive-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-categories-table-body">
+                                <tr><td colspan="3">Loading categories...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="js/admin-categories.js"></script>
+</body>
+</html>

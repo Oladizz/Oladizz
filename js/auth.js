@@ -15,7 +15,8 @@ const loginLink = document.getElementById('login-link');
 const signupLink = document.getElementById('signup-link');
 const logoutLink = document.getElementById('logout-link');
 const userEmailDisplay = document.getElementById('user-email');
-const adminPanelLink = document.getElementById('admin-panel-link'); // Assuming this ID will be added to HTML
+const adminPanelLink = document.getElementById('admin-panel-link');
+const profileLink = document.getElementById('profile-link'); // Added Profile Link
 
 // --- Sign-up Function ---
 async function handleSignUp(email, password) {
@@ -85,10 +86,15 @@ onAuthStateChanged(auth, async (user) => {
         }
 
         // Update UI based on auth state and admin status
+        // Update UI based on auth state and admin status
         if (loginLink) loginLink.style.display = 'none';
         if (signupLink) signupLink.style.display = 'none';
         if (logoutLink) logoutLink.style.display = 'block';
-        if (userEmailDisplay) userEmailDisplay.textContent = `Logged in as: ${user.email}`;
+        if (profileLink) profileLink.style.display = 'block'; // Show Profile link
+        if (userEmailDisplay) {
+            userEmailDisplay.textContent = user.email; // Just show email
+            userEmailDisplay.style.display = 'inline'; // Ensure it's visible
+        }
         
         if (adminPanelLink) {
             adminPanelLink.style.display = window.currentUserIsAdmin ? 'block' : 'none';
@@ -106,10 +112,15 @@ onAuthStateChanged(auth, async (user) => {
         if (loginLink) loginLink.style.display = 'block';
         if (signupLink) signupLink.style.display = 'block';
         if (logoutLink) logoutLink.style.display = 'none';
-        if (userEmailDisplay) userEmailDisplay.textContent = '';
+        if (profileLink) profileLink.style.display = 'none'; // Hide Profile link
+        if (userEmailDisplay) {
+            userEmailDisplay.textContent = '';
+            userEmailDisplay.style.display = 'none'; // Hide if no user
+        }
         if (adminPanelLink) adminPanelLink.style.display = 'none';
 
-        const protectedPagePaths = ['/checkout.html', '/order_confirmation.html', '/admin.html'];
+        // Added profile.html to protected pages
+        const protectedPagePaths = ['/checkout.html', '/order_confirmation.html', '/admin.html', '/profile.html'];
         const isProtectedPage = protectedPagePaths.some(path => window.location.pathname.endsWith(path));
         if (isProtectedPage) {
             console.log("User is on a protected page and logged out, redirecting to login.");

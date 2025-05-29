@@ -16,6 +16,7 @@
                     <li><a href="products.html">Products</a></li>
                     <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
                     <li><a href="admin.html" id="admin-panel-link" style="display:none;">Admin Panel</a></li>
+                    <li><a href="profile.html" id="profile-link" style="display:none;">My Profile</a></li>
                     <li><a href="login.html" id="login-link">Login</a></li>
                     <li><a href="signup.html" id="signup-link">Sign Up</a></li>
                     <li><a href="#" id="logout-link" style="display:none;">Logout</a></li>
@@ -27,6 +28,42 @@
 
     <main class="container">
         <h2>Our Products</h2>
+
+        <div id="product-filters-container" style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 4px;">
+            <h3>Filter by Category</h3>
+            <div id="category-filter-list" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                <!-- Category filters will be loaded here by JavaScript -->
+            </div>
+
+            <hr style="margin: 20px 0;"> <!-- Visual separator -->
+
+            <h3>Filter by Price</h3>
+            <form id="price-filter-form" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
+                <div style="flex: 1; min-width: 120px;">
+                    <label for="min-price" style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Min Price:</label>
+                    <input type="number" id="min-price" name="min-price" placeholder="0" min="0" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                </div>
+                <div style="flex: 1; min-width: 120px;">
+                    <label for="max-price" style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Max Price:</label>
+                    <input type="number" id="max-price" name="max-price" placeholder="Any" min="0" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                </div>
+                <button type="button" id="apply-price-filter-btn" class="button" style="padding: 8px 15px; flex-shrink: 0;">Apply</button>
+                <button type="button" id="clear-price-filter-btn" class="button" style="padding: 8px 15px; background-color: var(--secondary-color, #6c757d); flex-shrink: 0;">Clear</button>
+            </form>
+        </div>
+
+        <div id="sorting-container" style="margin-bottom: 20px; display: flex; justify-content: flex-end; align-items: center;">
+            <label for="sort-options" style="margin-right: 10px; font-weight: 500;">Sort by:</label>
+            <select id="sort-options" name="sort-options" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-width: 180px;">
+                <option value="">Default</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="name_asc">Name: A to Z</option>
+                <option value="name_desc">Name: Z to A</option>
+                <!-- Optional: <option value="featured">Featured First</option> -->
+            </select>
+        </div>
+
         <div id="product-list">
             <!-- Product listings will be dynamically inserted here -->
         </div>
