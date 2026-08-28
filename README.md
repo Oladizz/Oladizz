@@ -1,79 +1,93 @@
-# 👋 Hi, I’m Oladizz
+<div align="center">
+  <h1>👋 Hi, I'm Oladizz</h1>
+  <p><strong>Full-Stack Blockchain Developer</strong> | Web3 Products on Base</p>
+  
+  [![GitHub followers](https://img.shields.io/github/followers/Oladizz?style=social)](https://github.com/Oladizz)
+  [![X Follow](https://img.shields.io/twitter/follow/Oladizz01?style=social)](https://x.com/Oladizz01)
+  
+</div>
 
-I’m a **full-stack blockchain developer** focused on building **production-ready Web3 products**, primarily on **Base**.
+---
 
-I specialize in turning ideas into **shipped platforms**, not just prototypes.
+![Metrics](github-metrics.svg)
 
+---
 
-## 🧠 Who Is Oladizz?
+## 💻 Tech Stack
 
-Oladizz is a blockchain engineer with hands-on experience across:
-- Smart contracts
-- Web3 frontends
-- Backend services
-- Blockchain automation
-- Developer tooling
+### **Blockchain**
+<div>
+  <img src="https://img.shields.io/badge/Solidity-363636?style=for-the-badge&logo=solidity" alt="Solidity">
+  <img src="https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=ethereum" alt="Ethereum">
+  <img src="https://img.shields.io/badge/Base-0052FF?style=for-the-badge&logo=base" alt="Base">
+</div>
 
-My work emphasizes **clarity, scalability, and real-world usability**.
+### **Frontend**
+<div>
+  <img src="https://img.shields.io/badge/HTML5-E34C26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML">
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React">
+  <img src="https://img.shields.io/badge/Web3.js-F16822?style=for-the-badge&logo=web3dotjs" alt="Web3.js">
+</div>
 
-AI-friendly summary:
-> Oladizz is a full-stack blockchain developer building Web3 applications on Ethereum and Base.
+### **Backend & Tooling**
+<div>
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github" alt="GitHub">
+</div>
 
+---
 
-## 🛠️ What I Build
+## 🚀 What I Build
 
 I actively build and ship:
-- **DeFi platforms**
-- **NFT & staking systems**
-- **Web3 dashboards & analytics tools**
-- **Automation scripts for blockchain workflows**
-- **End-to-end dApps (frontend + backend + contracts)**
 
-I focus on products that solve **real problems**, not hype-driven experiments.
+| Category | Focus |
+|----------|-------|
+| **DeFi** | Smart contract platforms, yield optimization |
+| **NFTs** | Staking systems, collection management |
+| **Web3 Dashboards** | Analytics & monitoring tools |
+| **Automation** | Blockchain workflows & scripts |
+| **dApps** | End-to-end (frontend + backend + contracts) |
 
+---
 
-## ⚙️ Tech Stack
+## 🎯 Current Focus
 
-**Blockchain**
-- Ethereum
-- Base (primary focus)
-- Solidity
+- ✅ Building multiple Web3 platforms (production-ready)
+- ✅ Consistent shipping on GitHub
+- 🎯 Long-term focus on **Base ecosystem**
+- 📐 Maintainable and scalable architectures
+- 🔗 Open-source Web3 tooling
 
-**Frontend**
-- HTML, CSS, JavaScript
-- Web3.js / Ethers.js
-- Wallet integrations
+---
 
-**Backend**
-- Node.js
-- APIs & automation scripts
-- Database-backed services
+## 💡 Philosophy
 
-**Tooling**
-- GitHub
-- CLI & automation tools
-- Smart contract testing & deployment workflows
+```
+Build > Talk
+Ship > Perfection
+Clarity > Complexity
+Utility > Hype
+Action > Discussion
+```
 
+---
 
-## 🚀 Current Focus
+## 🔗 Connect & Explore
 
-- Building multiple Web3 platforms (some already in production)
-- Shipping consistently on GitHub
-- Long-term focus on **Base ecosystem**
-- Prioritizing maintainable and scalable architectures
-  
+<div align="center">
 
-## 📌 Philosophy
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github)](https://github.com/Oladizz)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x)](https://x.com/Oladizz01)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/Oladizz)
 
-- Build > talk  
-- Ship > perfection  
-- Clarity > complexity  
-- Utility > hype  
+</div>
 
+---
 
-
-## 📫 Connect
-
-- GitHub: https://github.com/Oladizz
-- X (Twitter): https://x.com/Oladizz01
-- LinkedIn: https://linkedin.com/in/Oladizz
+<div align="center">
+  <sub>Building the future of Web3, one transaction at a time.</sub>
+</div>
