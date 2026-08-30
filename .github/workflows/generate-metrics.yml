@@ -35,7 +35,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add data/metrics.json
+        git add data/metrics.json README.md
         git diff --quiet && git diff --staged --quiet || git commit -m "🔄 Update metrics - $(date)"
         git push
       continue-on-error: true

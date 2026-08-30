@@ -9,7 +9,25 @@
 
 ---
 
-![Metrics](github-metrics.svg)
+## 📊 Account Metrics Dashboard
+
+View real-time statistics of my GitHub account with interactive dashboards:
+
+### Live Metrics
+- **📈 Auto-generated every 6 hours** via GitHub Actions
+- **88 Total Repositories** (26 public, 62 private)
+- **8 Programming Languages** (TypeScript, JavaScript, Python, and more)
+- **6 Followers** | **3 Following**
+
+### 🎨 Dashboard Views
+
+| Dashboard | Description |
+|-----------|-------------|
+| [**Account Metrics (GitHub Actions)**](account-metrics-github-actions.html) | **Recommended** - Full account overview with live metrics, fetched automatically every 6 hours. No input required. |
+| [**Single Repository Metrics**](metrics.html) | Detailed metrics for this repository specifically. |
+| [**Interactive Dashboard (PAT Input)**](account-metrics.html) | Real-time metrics by entering a GitHub PAT token in your browser. |
+
+**🚀 Start here:** Open [account-metrics-github-actions.html](account-metrics-github-actions.html) to see your metrics dashboard!
 
 ---
 
@@ -58,9 +76,37 @@ I actively build and ship:
 
 - ✅ Building multiple Web3 platforms (production-ready)
 - ✅ Consistent shipping on GitHub
+- 📊 **Real-time GitHub metrics dashboard** with auto-refresh
 - 🎯 Long-term focus on **Base ecosystem**
 - 📐 Maintainable and scalable architectures
 - 🔗 Open-source Web3 tooling
+
+---
+
+## 🔧 Metrics System Architecture
+
+The metrics dashboard is powered by:
+
+```
+GitHub Actions (every 6 hours)
+    ↓
+Node.js Script (generates metrics)
+    ↓
+data/metrics.json (stored in repo)
+    ↓
+HTML Dashboard (reads JSON, displays beautifully)
+```
+
+### Files:
+- **`.github/workflows/generate-metrics.yml`** - Automated workflow that runs every 6 hours
+- **`scripts/generate-metrics.js`** - Node.js script that fetches GitHub API data
+- **`data/metrics.json`** - Generated metrics file (auto-committed)
+- **`account-metrics-github-actions.html`** - Dashboard that displays the metrics
+
+### Security:
+✅ PAT stored securely in GitHub Secrets  
+✅ Never exposed in code  
+✅ Automatically rotated on demand  
 
 ---
 

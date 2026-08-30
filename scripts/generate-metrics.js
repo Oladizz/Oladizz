@@ -139,6 +139,9 @@ async function generateMetrics() {
     const outputPath = path.join(dataDir, 'metrics.json');
     fs.writeFileSync(outputPath, JSON.stringify(metrics, null, 2));
     
+    // Update README with latest metrics
+    updateReadme(metrics);
+    
     console.log(`✅ Metrics generated successfully!`);
     console.log(`   Total Repos: ${metrics.statistics.total_repositories}`);
     console.log(`   Total Stars: ${metrics.statistics.total_stars}`);
@@ -152,3 +155,55 @@ async function generateMetrics() {
 }
 
 generateMetrics();
+
+// Function to update README with metrics
+function updateReadme(metrics) {
+  const fs = require('fs');
+  const path = require('path');
+  
+  const readmePath = path.join(__dirname, '../README.md');
+  let readmeContent = fs.readFileSync(readmePath, 'utf8');
+  
+  const stats = metrics.statistics;
+  const user = metrics.user;
+  const topLanguages = Object.entries(metrics.languages)
+    .slice(0, 5)
+    .map(([lang, count]) => `${lang}`)
+    .join(', ');
+  
+  const metricsSection = `## 📊 Account Metrics Dashboard
+
+View real-time statistics of my GitHub account with interactive dashboards:
+
+### Live Metrics
+- **📈 Auto-generated every 6 hours** via GitHub Actions
+- **${stats.total_repositories} Total Repositories** (${stats.public_repositories} public, ${stats.private_repositories} private)
+- **${stats.total_languages} Programming Languages** (${topLanguages}, and more)
+- **${user.followers} Followers** | **${user.following} Following**
+
+### 🎨 Dashboard Views
+
+| Dashboard | Description |
+|-----------|-------------|
+| [**Account Metrics (GitHub Actions)**](account-metrics-github-actions.html) | **Recommended** - Full account overview with live metrics, fetched automatically every 6 hours. No input required. |
+| [**Single Repository Metrics**](metrics.html) | Detailed metrics for this repository specifically. |
+| [**Interactive Dashboard (PAT Input)**](account-metrics.html) | Real-time metrics by entering a GitHub PAT token in your browser. |
+
+**🚀 Start here:** Open [account-metrics-github-actions.html](account-metrics-github-actions.html) to see your metrics dashboard!`;
+  
+  // Replace the metrics section
+  const metricsRegex = /## 📊 Account Metrics Dashboard[\s\S]*?(?=\n---\n)/;
+  
+  if (metricsRegex.test(readmeContent)) {
+    readmeContent = readmeContent.replace(metricsRegex, metricsSection);
+  } else {
+    // If section doesn't exist, add it after the header
+    readmeContent = readmeContent.replace(
+      /(<\/div>\n\n---\n)/,
+      `</div>\n\n---\n\n${metricsSection}\n\n---\n`
+    );
+  }
+  
+  fs.writeFileSync(readmePath, readmeContent);
+  console.log('✅ README.md updated with latest metrics');
+}
