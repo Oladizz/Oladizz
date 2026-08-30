@@ -1,0 +1,159 @@
+{
+  "generated_at": "2026-08-30T18:03:03.285Z",
+  "user": {
+    "login": "Oladizz",
+    "name": "Oladizz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/183990549?v=4",
+    "bio": "Full stack blockchain developer ",
+    "location": "Nigeria",
+    "public_repos": 26,
+    "followers": 6,
+    "following": 3,
+    "profile_url": "https://github.com/Oladizz"
+  },
+  "statistics": {
+    "total_repositories": 88,
+    "public_repositories": 26,
+    "private_repositories": 62,
+    "total_stars": 5,
+    "total_forks": 2,
+    "total_watchers": 5,
+    "total_issues": 6,
+    "total_languages": 8
+  },
+  "languages": {
+    "TypeScript": 60,
+    "JavaScript": 7,
+    "Python": 5,
+    "HTML": 3,
+    "CSS": 2,
+    "Makefile": 1,
+    "Rust": 1,
+    "C#": 1
+  },
+  "top_repositories": [
+    {
+      "name": "Polyarb",
+      "description": "poly market arbitrage ",
+      "url": "https://github.com/Oladizz/Polyarb",
+      "stars": 1,
+      "forks": 0,
+      "watchers": 1,
+      "language": "TypeScript",
+      "topics": [],
+      "updated_at": "2026-04-13T01:04:55Z",
+      "created_at": "2026-01-02T05:37:37Z"
+    },
+    {
+      "name": "DBS-CBT-AI",
+      "description": "DBS ",
+      "url": "https://github.com/Oladizz/DBS-CBT-AI",
+      "stars": 1,
+      "forks": 0,
+      "watchers": 1,
+      "language": "TypeScript",
+      "topics": [],
+      "updated_at": "2026-01-14T08:42:05Z",
+      "created_at": "2025-08-27T01:34:48Z"
+    },
+    {
+      "name": "FinFlow-AI-",
+      "description": "No description",
+      "url": "https://github.com/Oladizz/FinFlow-AI-",
+      "stars": 1,
+      "forks": 0,
+      "watchers": 1,
+      "language": "TypeScript",
+      "topics": [],
+      "updated_at": "2025-10-16T18:20:13Z",
+      "created_at": "2025-08-20T04:10:31Z"
+    },
+    {
+      "name": "Atlas-MD",
+      "description": "Most powerful and feature packed Whatsapp bot builtwith WhatsApp MD support",
+      "url": "https://github.com/Oladizz/Atlas-MD",
+      "stars": 1,
+      "forks": 0,
+      "watchers": 1,
+      "language": "JavaScript",
+      "topics": [],
+      "updated_at": "2025-09-10T02:02:47Z",
+      "created_at": "2025-09-09T01:06:50Z"
+    },
+    {
+      "name": "My-telegram-web-app",
+      "description": "No description",
+      "url": "https://github.com/Oladizz/My-telegram-web-app",
+      "stars": 1,
+      "forks": 0,
+      "watchers": 1,
+      "language": "CSS",
+      "topics": [],
+      "updated_at": "2025-09-08T00:44:16Z",
+      "created_at": "2024-10-12T23:08:59Z"
+    },
+    {
+      "name": "Oladizz",
+      "description": "Config files for my GitHub profile.",
+      "url": "https://github.com/Oladizz/Oladizz",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "HTML",
+      "topics": [
+        "config",
+        "github-config"
+      ],
+      "updated_at": "2026-08-30T18:02:05Z",
+      "created_at": "2024-10-11T17:41:42Z"
+    },
+    {
+      "name": "Oladizz.xyz",
+      "description": "My portfolio",
+      "url": "https://github.com/Oladizz/Oladizz.xyz",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "TypeScript",
+      "topics": [],
+      "updated_at": "2026-08-30T17:28:40Z",
+      "created_at": "2025-11-21T19:26:59Z"
+    },
+    {
+      "name": "Qryntal-",
+      "description": "A all  in  one web 3 hub",
+      "url": "https://github.com/Oladizz/Qryntal-",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "TypeScript",
+      "topics": [],
+      "updated_at": "2026-08-30T15:24:38Z",
+      "created_at": "2025-11-21T01:50:16Z"
+    },
+    {
+      "name": "my_github_scraper",
+      "description": "No description",
+      "url": "https://github.com/Oladizz/my_github_scraper",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "Python",
+      "topics": [],
+      "updated_at": "2026-08-30T14:41:51Z",
+      "created_at": "2026-04-12T23:24:47Z"
+    },
+    {
+      "name": "DiffusionStudio.Windows",
+      "description": "No description",
+      "url": "https://github.com/Oladizz/DiffusionStudio.Windows",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "Makefile",
+      "topics": [],
+      "updated_at": "2026-08-30T03:04:31Z",
+      "created_at": "2026-08-30T01:57:48Z"
+    }
+  ]
+}
