@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Metrics Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* LEFT SIDE - METRICS */
+        .metrics-panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            overflow-y: auto;
+            box-shadow: -2px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .metrics-panel h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 28px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .metric-card h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-card .subtext {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metrics-grid .metric-card {
+            margin-bottom: 0;
+        }
+
+        .repo-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .repo-info p {
+            color: #333;
+            margin: 8px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .repo-info strong {
+            color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: #667eea;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        /* RIGHT SIDE - CONTENT */
+        .content-panel {
+            background: white;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-panel h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .content-panel p {
+            color: #666;
+            font-size: 16px;
+            text-align: center;
+            max-width: 500px;
+            line-height: 1.8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .metrics-panel {
+                min-height: 50vh;
+                box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .content-panel {
+                min-height: 50vh;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- LEFT SIDE - METRICS -->
+        <div class="metrics-panel">
+            <h1>📊 Repository Metrics</h1>
+            <div id="metricsContainer" class="loading">
+                Loading metrics...
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE - CONTENT -->
+        <div class="content-panel">
+            <h2>🚀 Repository Dashboard</h2>
+            <p>Welcome to your repository metrics dashboard! All key metrics and statistics are displayed on the left side for quick access and analysis.</p>
+            <div class="action-buttons">
+                <a href="https://github.com/Oladizz/Oladizz" target="_blank" class="btn btn-primary">View on GitHub</a>
+                <button class="btn btn-secondary" onclick="refreshMetrics()">Refresh Metrics</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchMetrics() {
+            const owner = 'Oladizz';
+            const repo = 'Oladizz';
+            
+            try {
+                // Fetch repository data
+                const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+                const repoData = await repoResponse.json();
+
+                // Fetch commits
+                const commitsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`);
+                const commitsData = await commitsResponse.json();
+                const commitCount = commitsResponse.headers.get('link')
+                    ? parseInt(commitsResponse.headers.get('link').match(/page=(\d+)>; rel="last"/)?.[1] || '1')
+                    : 1;
+
+                // Fetch branches
+                const branchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`);
+                const branchesData = await branchesResponse.json();
+
+                // Fetch contributors
+                const contributorsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contributors`);
+                const contributorsData = await contributorsResponse.json();
+
+                // Fetch languages
+                const languagesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/languages`);
+                const languagesData = await languagesResponse.json();
+
+                displayMetrics({
+                    repo: repoData,
+                    commits: commitsData,
+                    commitCount: commitsData.length > 0 ? (commitsData[0]?.commit?.tree?.sha ? 'N/A' : commitsData.length) : 0,
+                    branches: branchesData,
+                    contributors: contributorsData,
+                    languages: languagesData
+                });
+            } catch (error) {
+                displayError('Unable to fetch metrics. Please check the repository name or try again later.');
+                console.error('Error fetching metrics:', error);
+            }
+        }
+
+        function displayMetrics(data) {
+            const container = document.getElementById('metricsContainer');
+            
+            const stars = data.repo.stargazers_count || 0;
+            const forks = data.repo.forks_count || 0;
+            const watchers = data.repo.watchers_count || 0;
+            const issues = data.repo.open_issues_count || 0;
+            const branches = data.branches?.length || 0;
+            const contributors = data.contributors?.length || 0;
+            const language = data.repo.language || 'Not specified';
+            const description = data.repo.description || 'No description';
+            const url = data.repo.html_url || '#';
+            const created = new Date(data.repo.created_at).toLocaleDateString();
+            const updated = new Date(data.repo.updated_at).toLocaleDateString();
+            
+            const languageList = Object.keys(data.languages || {})
+                .sort((a, b) => data.languages[b] - data.languages[a])
+                .slice(0, 3)
+                .join(', ') || 'Not specified';
+
+            let html = `
+                <div class="repo-info">
+                    <p><strong>Repository:</strong> ${data.repo.name}</p>
+                    <p><strong>Description:</strong> ${description}</p>
+                    <p><strong>URL:</strong> <a href="${url}" target="_blank" style="color: #667eea;">${url}</a></p>
+                    <p><strong>Created:</strong> ${created}</p>
+                    <p><strong>Last Updated:</strong> ${updated}</p>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>⭐ Stars</h3>
+                        <div class="value">${stars}</div>
+                        <div class="subtext">Repository stars</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>🔀 Forks</h3>
+                        <div class="value">${forks}</div>
+                        <div class="subtext">Total forks</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>👁️ Watchers</h3>
+                        <div class="value">${watchers}</div>
+                        <div class="subtext">Repository watchers</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>🐛 Issues</h3>
+                        <div class="value">${issues}</div>
+                        <div class="subtext">Open issues</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>🌳 Branches</h3>
+                        <div class="value">${branches}</div>
+                        <div class="subtext">Active branches</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>👥 Contributors</h3>
+                        <div class="value">${contributors}</div>
+                        <div class="subtext">Total contributors</div>
+                    </div>
+                </div>
+
+                <div class="repo-info">
+                    <p><strong>Primary Language:</strong> ${language}</p>
+                    <p><strong>Top Languages:</strong> ${languageList}</p>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function displayError(message) {
+            const container = document.getElementById('metricsContainer');
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        function refreshMetrics() {
+            const container = document.getElementById('metricsContainer');
+            container.innerHTML = '<div class="loading">Refreshing metrics...</div>';
+            setTimeout(() => fetchMetrics(), 500);
+        }
+
+        // Load metrics on page load
+        fetchMetrics();
+
+        // Auto-refresh every 5 minutes
+        setInterval(fetchMetrics, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
