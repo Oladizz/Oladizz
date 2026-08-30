@@ -16,7 +16,7 @@ View real-time statistics of my GitHub account with interactive dashboards:
 ### Live Metrics
 - **📈 Auto-generated every 6 hours** via GitHub Actions
 - **88 Total Repositories** (26 public, 62 private)
-- **8 Programming Languages** (TypeScript, JavaScript, Python, and more)
+- **8 Programming Languages** (TypeScript, JavaScript, Python, HTML, CSS, and more)
 - **6 Followers** | **3 Following**
 
 ### 🎨 Dashboard Views
@@ -28,7 +28,6 @@ View real-time statistics of my GitHub account with interactive dashboards:
 | [**Interactive Dashboard (PAT Input)**](account-metrics.html) | Real-time metrics by entering a GitHub PAT token in your browser. |
 
 **🚀 Start here:** Open [account-metrics-github-actions.html](account-metrics-github-actions.html) to see your metrics dashboard!
-
 ---
 
 ## 💻 Tech Stack
