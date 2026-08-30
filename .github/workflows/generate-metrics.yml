@@ -26,7 +26,7 @@ jobs:
     - name: Generate metrics
       run: node scripts/generate-metrics.js
       env:
-        GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+        GITHUB_PAT: ${{ secrets.GH_PAT }}
     
     - name: Commit metrics
       run: |
