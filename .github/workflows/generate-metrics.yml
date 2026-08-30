@@ -1,0 +1,38 @@
+name: Generate Account Metrics
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate-metrics:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Generate metrics
+      run: node scripts/generate-metrics.js
+      env:
+        GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+    
+    - name: Commit metrics
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data/metrics.json
+        git diff --quiet && git diff --staged --quiet || git commit -m "🔄 Update metrics - $(date)"
+        git push
+      continue-on-error: true
