@@ -17,19 +17,20 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
     
     - name: Generate metrics
       run: node scripts/generate-metrics.js
       env:
-        GITHUB_PAT: ${{ secrets.GH_PAT }}
+        GITHUB_PAT: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Commit metrics
       run: |

@@ -1,49 +1,36 @@
 {
-  "generated_at": "2026-08-30T18:12:51.405Z",
+  "generated_at": "2026-09-13T20:56:33.979Z",
   "user": {
     "login": "Oladizz",
     "name": "Oladizz",
     "avatar_url": "https://avatars.githubusercontent.com/u/183990549?v=4",
     "bio": "Full stack blockchain developer ",
     "location": "Nigeria",
-    "public_repos": 26,
-    "followers": 6,
+    "public_repos": 28,
+    "followers": 7,
     "following": 3,
     "profile_url": "https://github.com/Oladizz"
   },
   "statistics": {
-    "total_repositories": 88,
-    "public_repositories": 26,
-    "private_repositories": 62,
-    "total_stars": 5,
+    "total_repositories": 89,
+    "public_repositories": 28,
+    "private_repositories": 61,
+    "total_stars": 4,
     "total_forks": 2,
-    "total_watchers": 5,
-    "total_issues": 6,
-    "total_languages": 8
+    "total_watchers": 4,
+    "total_issues": 7,
+    "total_languages": 7
   },
   "languages": {
     "TypeScript": 60,
-    "JavaScript": 7,
-    "Python": 5,
+    "Python": 7,
+    "JavaScript": 6,
+    "CSS": 3,
     "HTML": 3,
-    "CSS": 2,
     "Makefile": 1,
-    "Rust": 1,
     "C#": 1
   },
   "top_repositories": [
-    {
-      "name": "Polyarb",
-      "description": "poly market arbitrage ",
-      "url": "https://github.com/Oladizz/Polyarb",
-      "stars": 1,
-      "forks": 0,
-      "watchers": 1,
-      "language": "TypeScript",
-      "topics": [],
-      "updated_at": "2026-04-13T01:04:55Z",
-      "created_at": "2026-01-02T05:37:37Z"
-    },
     {
       "name": "DBS-CBT-AI",
       "description": "DBS ",
@@ -104,56 +91,68 @@
         "config",
         "github-config"
       ],
-      "updated_at": "2026-08-30T18:04:12Z",
+      "updated_at": "2026-09-13T01:39:17Z",
       "created_at": "2024-10-11T17:41:42Z"
     },
     {
-      "name": "Oladizz.xyz",
-      "description": "My portfolio",
-      "url": "https://github.com/Oladizz/Oladizz.xyz",
+      "name": "cirlo-landing-page-",
+      "description": "landing page for cirlo",
+      "url": "https://github.com/Oladizz/cirlo-landing-page-",
       "stars": 0,
       "forks": 0,
       "watchers": 0,
       "language": "TypeScript",
       "topics": [],
-      "updated_at": "2026-08-30T17:28:40Z",
-      "created_at": "2025-11-21T19:26:59Z"
+      "updated_at": "2026-09-09T01:50:11Z",
+      "created_at": "2026-08-20T23:44:38Z"
     },
     {
-      "name": "Qryntal-",
-      "description": "A all  in  one web 3 hub",
-      "url": "https://github.com/Oladizz/Qryntal-",
+      "name": "Mailspark",
+      "description": "For sending mass emails",
+      "url": "https://github.com/Oladizz/Mailspark",
       "stars": 0,
       "forks": 0,
       "watchers": 0,
       "language": "TypeScript",
       "topics": [],
-      "updated_at": "2026-08-30T15:24:38Z",
-      "created_at": "2025-11-21T01:50:16Z"
+      "updated_at": "2026-09-08T20:44:21Z",
+      "created_at": "2025-10-28T16:25:08Z"
     },
     {
-      "name": "my_github_scraper",
+      "name": "litetrack",
       "description": "No description",
-      "url": "https://github.com/Oladizz/my_github_scraper",
+      "url": "https://github.com/Oladizz/litetrack",
       "stars": 0,
       "forks": 0,
       "watchers": 0,
-      "language": "Python",
+      "language": "TypeScript",
       "topics": [],
-      "updated_at": "2026-08-30T14:41:51Z",
-      "created_at": "2026-04-12T23:24:47Z"
+      "updated_at": "2026-09-08T02:30:17Z",
+      "created_at": "2026-07-16T21:47:02Z"
     },
     {
-      "name": "DiffusionStudio.Windows",
-      "description": "No description",
-      "url": "https://github.com/Oladizz/DiffusionStudio.Windows",
+      "name": "Pynor",
+      "description": "A pinging service ",
+      "url": "https://github.com/Oladizz/Pynor",
       "stars": 0,
       "forks": 0,
       "watchers": 0,
-      "language": "Makefile",
+      "language": "TypeScript",
       "topics": [],
-      "updated_at": "2026-08-30T03:04:31Z",
-      "created_at": "2026-08-30T01:57:48Z"
+      "updated_at": "2026-09-08T01:27:01Z",
+      "created_at": "2025-10-30T17:17:53Z"
+    },
+    {
+      "name": "phonefix-by-oladizz",
+      "description": "PhoneFix by Oladizz - Phone repair & tech solution",
+      "url": "https://github.com/Oladizz/phonefix-by-oladizz",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "TypeScript",
+      "topics": [],
+      "updated_at": "2026-09-08T00:56:08Z",
+      "created_at": "2026-07-29T01:26:55Z"
     }
   ]
 }

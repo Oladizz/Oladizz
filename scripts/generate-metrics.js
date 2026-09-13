@@ -4,10 +4,10 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const PAT = process.env.GITHUB_PAT;
+const PAT = process.env.GITHUB_PAT || process.env.GITHUB_TOKEN;
 
 if (!PAT) {
-  console.error('Error: GITHUB_PAT environment variable is not set');
+  console.error('Error: Neither GITHUB_PAT nor GITHUB_TOKEN environment variable is set');
   process.exit(1);
 }
 
@@ -138,9 +138,6 @@ async function generateMetrics() {
     // Write metrics to file
     const outputPath = path.join(dataDir, 'metrics.json');
     fs.writeFileSync(outputPath, JSON.stringify(metrics, null, 2));
-    
-    // Update README with latest metrics
-    updateReadme(metrics);
     
     console.log(`✅ Metrics generated successfully!`);
     console.log(`   Total Repos: ${metrics.statistics.total_repositories}`);
