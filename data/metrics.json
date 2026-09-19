@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-19T10:13:56.821Z",
+  "generated_at": "2026-09-19T15:15:35.462Z",
   "user": {
     "login": "Oladizz",
     "name": "Oladizz",
     "avatar_url": "https://avatars.githubusercontent.com/u/183990549?v=4",
     "bio": "Full stack blockchain developer ",
     "location": "Nigeria",
-    "public_repos": 28,
+    "public_repos": 29,
     "followers": 7,
     "following": 3,
     "profile_url": "https://github.com/Oladizz"
   },
   "statistics": {
-    "total_repositories": 89,
-    "public_repositories": 28,
+    "total_repositories": 90,
+    "public_repositories": 29,
     "private_repositories": 61,
     "total_stars": 4,
     "total_forks": 2,
@@ -25,8 +25,8 @@
     "TypeScript": 60,
     "Python": 7,
     "JavaScript": 6,
+    "HTML": 4,
     "CSS": 3,
-    "HTML": 3,
     "Makefile": 1,
     "C#": 1
   },
@@ -80,6 +80,18 @@
       "created_at": "2024-10-12T23:08:59Z"
     },
     {
+      "name": "ux-standards",
+      "description": "Enterprise UX/UI Engineering Standards & Checklist System for AI Agents (112 topics, 717 canonical rules)",
+      "url": "https://github.com/Oladizz/ux-standards",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "HTML",
+      "topics": [],
+      "updated_at": "2026-09-19T11:01:26Z",
+      "created_at": "2026-09-19T11:01:13Z"
+    },
+    {
       "name": "Oladizz",
       "description": "Config files for my GitHub profile.",
       "url": "https://github.com/Oladizz/Oladizz",
@@ -91,7 +103,7 @@
         "config",
         "github-config"
       ],
-      "updated_at": "2026-09-19T02:55:45Z",
+      "updated_at": "2026-09-19T10:14:01Z",
       "created_at": "2024-10-11T17:41:42Z"
     },
     {
@@ -141,18 +153,6 @@
       "topics": [],
       "updated_at": "2026-09-08T02:30:17Z",
       "created_at": "2026-07-16T21:47:02Z"
-    },
-    {
-      "name": "Pynor",
-      "description": "A pinging service ",
-      "url": "https://github.com/Oladizz/Pynor",
-      "stars": 0,
-      "forks": 0,
-      "watchers": 0,
-      "language": "TypeScript",
-      "topics": [],
-      "updated_at": "2026-09-08T01:27:01Z",
-      "created_at": "2025-10-30T17:17:53Z"
     }
   ]
 }
