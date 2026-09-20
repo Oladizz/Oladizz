@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-19T19:58:36.095Z",
+  "generated_at": "2026-09-20T03:08:45.012Z",
   "user": {
     "login": "Oladizz",
     "name": "Oladizz",
@@ -91,8 +91,32 @@
         "config",
         "github-config"
       ],
-      "updated_at": "2026-09-19T15:15:39Z",
+      "updated_at": "2026-09-20T01:56:04Z",
       "created_at": "2024-10-11T17:41:42Z"
+    },
+    {
+      "name": "cirlo-landing-page-",
+      "description": "landing page for cirlo",
+      "url": "https://github.com/Oladizz/cirlo-landing-page-",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "TypeScript",
+      "topics": [],
+      "updated_at": "2026-09-19T22:29:14Z",
+      "created_at": "2026-08-20T23:44:38Z"
+    },
+    {
+      "name": "Qryntal-",
+      "description": "A all  in  one web 3 hub",
+      "url": "https://github.com/Oladizz/Qryntal-",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "language": "TypeScript",
+      "topics": [],
+      "updated_at": "2026-09-19T21:46:11Z",
+      "created_at": "2025-11-21T01:50:16Z"
     },
     {
       "name": "ux-standards",
@@ -105,30 +129,6 @@
       "topics": [],
       "updated_at": "2026-09-19T11:01:26Z",
       "created_at": "2026-09-19T11:01:13Z"
-    },
-    {
-      "name": "Qryntal-",
-      "description": "A all  in  one web 3 hub",
-      "url": "https://github.com/Oladizz/Qryntal-",
-      "stars": 0,
-      "forks": 0,
-      "watchers": 0,
-      "language": "TypeScript",
-      "topics": [],
-      "updated_at": "2026-09-18T23:20:37Z",
-      "created_at": "2025-11-21T01:50:16Z"
-    },
-    {
-      "name": "cirlo-landing-page-",
-      "description": "landing page for cirlo",
-      "url": "https://github.com/Oladizz/cirlo-landing-page-",
-      "stars": 0,
-      "forks": 0,
-      "watchers": 0,
-      "language": "TypeScript",
-      "topics": [],
-      "updated_at": "2026-09-14T12:19:04Z",
-      "created_at": "2026-08-20T23:44:38Z"
     },
     {
       "name": "Mailspark",
