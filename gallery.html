@@ -26,16 +26,16 @@
               500: '#10b981',
               600: '#059669',
               700: '#047857',
-              900: '#064e3b',
               accent: '#06b6d4',
-              violet: '#8b5cf6'
+              violet: '#8b5cf6',
+              indigo: '#6366f1'
             },
             dark: {
-              bg: '#090d16',
-              surface: '#111827',
-              card: '#162032',
-              border: '#1f2d44',
-              hover: '#22324e'
+              bg: '#080c14',
+              surface: '#0f1623',
+              card: '#141d2e',
+              border: '#1e293b',
+              hover: '#1e2d42'
             }
           },
           fontFamily: {
@@ -53,38 +53,46 @@
   <style>
     /* Custom Scrollbars */
     ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #090d16;
+      background: #080c14;
     }
     ::-webkit-scrollbar-thumb {
-      background: #1f2d44;
+      background: #1e293b;
       border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #34d399;
+      background: #10b981;
     }
 
-    /* Glassmorphism & Glows */
-    .glass-panel {
-      background: rgba(22, 32, 50, 0.75);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Ambient Background Glow */
+    .ambient-bg {
+      background-color: #080c14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
     }
+
+    /* Glassmorphism & Panels */
     .glass-nav {
-      background: rgba(9, 13, 22, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(8, 12, 20, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     }
-    .neon-glow {
-      box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.35);
+    .glass-card {
+      background: rgba(20, 29, 46, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
-    .neon-border {
-      border-color: rgba(16, 185, 129, 0.5);
+    .glass-card:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 12px 30px -10px rgba(16, 185, 129, 0.15);
     }
 
     /* Masonry column support */
@@ -98,7 +106,7 @@
     @media (min-width: 1024px) {
       .masonry-grid { column-count: 3; }
     }
-    @media (min-width: 1440px) {
+    @media (min-width: 1536px) {
       .masonry-grid { column-count: 4; }
     }
     .masonry-item {
@@ -106,7 +114,7 @@
       margin-bottom: 1.25rem;
     }
 
-    /* Toast animation */
+    /* Toast Animation */
     @keyframes slideUp {
       from { transform: translateY(100%) scale(0.95); opacity: 0; }
       to { transform: translateY(0) scale(1); opacity: 1; }
@@ -114,31 +122,54 @@
     .toast-animate {
       animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
+    /* Shimmer Effect */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .animate-shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite;
+    }
   </style>
 </head>
-<body class="bg-[#090d16] text-slate-100 min-h-screen font-sans selection:bg-brand-500 selection:text-white flex flex-col">
+<body class="ambient-bg text-slate-100 min-h-screen font-sans selection:bg-brand-500 selection:text-white flex flex-col antialiased">
+
+  <!-- ==================== WHOLE WINDOW DRAG & DROP OVERLAY ==================== -->
+  <div id="fullWindowDropOverlay" class="fixed inset-0 z-50 hidden bg-brand-900/80 backdrop-blur-md flex flex-col items-center justify-center pointer-events-none transition-all">
+    <div class="p-8 rounded-3xl bg-slate-900/90 border-2 border-dashed border-brand-400 flex flex-col items-center text-center max-w-md shadow-2xl scale-105 transition-transform animate-pulse">
+      <div class="w-20 h-20 rounded-2xl bg-brand-500/20 text-brand-400 flex items-center justify-center mb-4">
+        <i data-lucide="upload-cloud" class="w-10 h-10"></i>
+      </div>
+      <h2 class="text-xl font-bold text-white mb-1">Drop pictures to upload</h2>
+      <p class="text-sm text-slate-300">Release files anywhere to start uploading to PicShare</p>
+    </div>
+  </div>
 
   <!-- ==================== TOP NAVIGATION ==================== -->
   <header class="sticky top-0 z-40 glass-nav">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       
-      <!-- Logo & Brand -->
+      <!-- Brand Logo -->
       <div class="flex items-center gap-3">
-        <a href="gallery.html" class="flex items-center gap-2.5 group">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-accent flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform duration-200">
-            <i data-lucide="camera" class="w-5 h-5 text-white"></i>
+        <a href="gallery.html" class="flex items-center gap-3 group">
+          <div class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-brand-accent flex items-center justify-center shadow-lg shadow-brand-500/25 group-hover:scale-105 transition-transform duration-200">
+            <i data-lucide="image" class="w-5 h-5 text-white"></i>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-brand-400 rounded-full border-2 border-[#080c14] animate-ping"></span>
           </div>
           <div>
-            <div class="flex items-center gap-1.5">
-              <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">PicShare</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 font-mono font-semibold border border-brand-500/20">PhotoHub</span>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">PicShare</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 font-mono font-bold border border-brand-500/25 tracking-wide uppercase">PhotoHub</span>
             </div>
             <p class="text-[11px] text-slate-400 leading-none">Post, Organize & Share Pictures</p>
           </div>
         </a>
       </div>
 
-      <!-- Quick Search Bar (Center) -->
+      <!-- Quick Search Bar (Desktop) -->
       <div class="hidden md:flex flex-1 max-w-md mx-4 relative">
         <div class="relative w-full">
           <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
@@ -146,7 +177,7 @@
             type="text" 
             id="searchInput" 
             placeholder="Search by caption, #tag, album, filename... (Press / to focus)" 
-            class="w-full bg-[#111827]/80 text-sm text-slate-200 placeholder-slate-500 pl-10 pr-10 py-2 rounded-xl border border-slate-700/60 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all"
+            class="w-full bg-[#0f1623]/90 text-sm text-slate-200 placeholder-slate-500 pl-10 pr-10 py-2 rounded-xl border border-slate-700/80 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
           >
           <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
             <i data-lucide="x" class="w-3.5 h-3.5"></i>
@@ -156,11 +187,12 @@
 
       <!-- Actions Right -->
       <div class="flex items-center gap-2.5">
-        <!-- New Album Button -->
+        
+        <!-- Create Album Button -->
         <button 
           onclick="openNewAlbumModal()"
-          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700/60 transition-colors"
-          title="Create New Album"
+          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700/60 transition-all hover:scale-102"
+          title="Create New Album (Key: A)"
         >
           <i data-lucide="folder-plus" class="w-4 h-4 text-brand-400"></i>
           <span>New Album</span>
@@ -169,16 +201,17 @@
         <!-- Settings Button -->
         <button 
           onclick="openSettingsModal()" 
-          class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/60 transition-colors" 
+          class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/60 transition-all hover:scale-105" 
           title="Cloud & IPFS Settings"
         >
           <i data-lucide="settings" class="w-4 h-4"></i>
         </button>
 
-        <!-- Main Upload Button -->
+        <!-- Primary Upload Button -->
         <button 
           onclick="openUploadModal()" 
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white text-sm font-semibold shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white text-sm font-semibold shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 cursor-pointer"
+          title="Upload Pictures (Key: U)"
         >
           <i data-lucide="upload-cloud" class="w-4 h-4"></i>
           <span>Post Pictures</span>
@@ -194,15 +227,64 @@
           type="text" 
           id="mobileSearchInput" 
           placeholder="Search pictures..." 
-          class="w-full bg-[#111827] text-sm text-slate-200 placeholder-slate-500 pl-9 pr-8 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500"
+          class="w-full bg-[#0f1623] text-sm text-slate-200 placeholder-slate-500 pl-9 pr-8 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500"
         >
       </div>
     </div>
   </header>
 
+  <!-- ==================== HERO STATS BAR ==================== -->
+  <section class="border-b border-slate-800/80 bg-gradient-to-r from-[#0c121e] via-[#0f172a] to-[#0c121e]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+            <i data-lucide="images" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-base font-bold text-white leading-tight" id="statTotalPhotos">0</div>
+            <div class="text-[11px] text-slate-400">Total Pictures</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0">
+            <i data-lucide="folder" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-base font-bold text-white leading-tight" id="statTotalAlbums">0</div>
+            <div class="text-[11px] text-slate-400">Smart Albums</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
+            <i data-lucide="tag" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-base font-bold text-white leading-tight" id="statTotalTags">0</div>
+            <div class="text-[11px] text-slate-400">Unique Tags</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+            <i data-lucide="hard-drive" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-base font-bold text-white leading-tight" id="statTotalStorage">0 MB</div>
+            <div class="text-[11px] text-slate-400">Vault Storage</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- ==================== SUB-BAR: ALBUMS, TAGS & CONTROLS ==================== -->
-  <section class="border-b border-slate-800/80 bg-[#0c121e]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 space-y-3">
+  <section class="border-b border-slate-800/80 bg-[#0a0f1a]/95 sticky top-16 z-30 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 space-y-2.5">
       
       <!-- Top Row: Albums Ribbon & View Toggles -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -215,15 +297,15 @@
         <!-- Controls: Visibility filter, Sort dropdown, Layout switch -->
         <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
           
-          <!-- Visibility Selector -->
+          <!-- Visibility Selector (Option 3 requested by user) -->
           <div class="relative">
             <select 
               id="visibilityFilter" 
-              class="appearance-none bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-xs font-medium pl-3 pr-8 py-1.5 rounded-lg border border-slate-700/80 focus:outline-none focus:border-brand-500 cursor-pointer"
+              class="appearance-none bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-xs font-semibold pl-3 pr-8 py-1.5 rounded-lg border border-slate-700/80 focus:outline-none focus:border-brand-500 cursor-pointer"
             >
               <option value="all">🌐 All Visibility</option>
               <option value="public">🌟 Public Showcase</option>
-              <option value="unlisted">🔒 Unlisted (Direct Link)</option>
+              <option value="unlisted">🔒 Unlisted (Direct Share Only)</option>
             </select>
             <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
           </div>
@@ -232,7 +314,7 @@
           <div class="relative">
             <select 
               id="sortBy" 
-              class="appearance-none bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-xs font-medium pl-3 pr-8 py-1.5 rounded-lg border border-slate-700/80 focus:outline-none focus:border-brand-500 cursor-pointer"
+              class="appearance-none bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-xs font-semibold pl-3 pr-8 py-1.5 rounded-lg border border-slate-700/80 focus:outline-none focus:border-brand-500 cursor-pointer"
             >
               <option value="newest">🕒 Newest First</option>
               <option value="oldest">🕰️ Oldest First</option>
@@ -248,7 +330,7 @@
               id="viewMasonryBtn" 
               onclick="setLayoutMode('masonry')" 
               class="p-1.5 rounded-md text-slate-300 hover:text-white transition-colors" 
-              title="Masonry View"
+              title="Masonry Grid View"
             >
               <i data-lucide="columns" class="w-3.5 h-3.5"></i>
             </button>
@@ -274,8 +356,8 @@
 
       <!-- Bottom Row: Filter Badges & Tags Cloud Ribbon -->
       <div class="flex items-center gap-2 overflow-x-auto text-xs text-slate-400" id="tagsRibbon">
-        <span class="text-slate-500 flex items-center gap-1 shrink-0 font-medium text-[11px]">
-          <i data-lucide="tag" class="w-3 h-3"></i> Tags:
+        <span class="text-slate-500 flex items-center gap-1 shrink-0 font-semibold text-[11px]">
+          <i data-lucide="tag" class="w-3 h-3 text-brand-400"></i> Tags:
         </span>
         <div id="tagsList" class="flex items-center gap-1.5">
           <!-- Populated dynamically via renderTags() -->
@@ -285,37 +367,37 @@
     </div>
   </section>
 
-  <!-- ==================== MAIN CONTENT ==================== -->
+  <!-- ==================== MAIN GALLERY CONTAINER ==================== -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- Active Filter Banner (Shown if filtering) -->
-    <div id="activeFilterBanner" class="hidden mb-6 p-3 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-between">
+    <div id="activeFilterBanner" class="hidden mb-5 p-3 rounded-xl bg-brand-500/10 border border-brand-500/25 flex items-center justify-between">
       <div class="flex items-center gap-2 text-xs text-brand-300">
         <i data-lucide="filter" class="w-4 h-4"></i>
         <span id="activeFilterText">Filtered by: ...</span>
       </div>
-      <button onclick="clearAllFilters()" class="text-xs text-brand-400 hover:text-white font-semibold underline underline-offset-2">
-        Clear Filters
+      <button onclick="clearAllFilters()" class="text-xs text-brand-400 hover:text-white font-bold underline underline-offset-2">
+        Clear All Filters
       </button>
     </div>
 
-    <!-- Stats Ribbon -->
+    <!-- Gallery Counter Bar -->
     <div class="flex items-center justify-between text-xs text-slate-400 mb-4 px-1">
       <div class="flex items-center gap-2">
-        <span id="galleryCounter" class="font-medium text-slate-300">Showing 0 pictures</span>
+        <span id="galleryCounter" class="font-semibold text-slate-200">Showing 0 pictures</span>
         <span class="text-slate-600">•</span>
         <span id="storageCounter">0 MB total</span>
       </div>
       <div class="flex items-center gap-3">
-        <span class="flex items-center gap-1.5 text-emerald-400/90 text-[11px]">
+        <span class="flex items-center gap-1.5 text-emerald-400 text-[11px] font-mono">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          IPFS & Local Storage Synced
+          IPFS Storage Live
         </span>
       </div>
     </div>
 
-    <!-- Gallery Container -->
-    <div id="galleryContainer" class="min-h-[400px]">
+    <!-- Gallery Grid View -->
+    <div id="galleryContainer" class="min-h-[450px]">
       <!-- Populated dynamically -->
     </div>
 
@@ -324,13 +406,13 @@
       <div class="w-20 h-20 rounded-2xl bg-slate-800/60 border border-slate-700/80 flex items-center justify-center mb-4 text-slate-500">
         <i data-lucide="image-off" class="w-10 h-10"></i>
       </div>
-      <h3 class="text-lg font-bold text-slate-200 mb-1">No pictures found</h3>
+      <h3 class="text-lg font-bold text-slate-200 mb-1">No pictures match your criteria</h3>
       <p class="text-sm text-slate-400 max-w-md mb-6" id="emptyStateDesc">
-        Upload your first photo or screenshot to get started. You can organize by albums, tags, and generate permanent shareable links for anyone.
+        Upload pictures by dragging and dropping them anywhere, or click below to post image files and get shareable links.
       </p>
       <button 
         onclick="openUploadModal()" 
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/20 transition-all"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/20 transition-all cursor-pointer"
       >
         <i data-lucide="upload-cloud" class="w-4 h-4"></i>
         <span>Upload Picture Now</span>
@@ -339,22 +421,39 @@
 
   </main>
 
+  <!-- ==================== FLOATING BATCH SELECTION BAR ==================== -->
+  <div id="batchBar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden items-center gap-3 px-5 py-3 rounded-2xl bg-slate-900/95 border border-brand-500/40 shadow-2xl backdrop-blur-md">
+    <div class="flex items-center gap-2 text-xs font-bold text-white">
+      <span class="w-5 h-5 rounded-full bg-brand-500 flex items-center justify-center text-[10px]" id="batchSelectedCount">0</span>
+      <span>Pictures Selected</span>
+    </div>
+    <div class="h-4 w-[1px] bg-slate-700"></div>
+    <div class="flex items-center gap-2">
+      <button onclick="downloadBatchSelected()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i> Download All
+      </button>
+      <button onclick="deleteBatchSelected()" class="px-3 py-1.5 rounded-lg bg-rose-900/50 hover:bg-rose-900 text-xs font-semibold text-rose-200 flex items-center gap-1.5">
+        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
+      </button>
+      <button onclick="clearBatchSelection()" class="p-1.5 rounded-lg text-slate-400 hover:text-white">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
   <!-- ==================== FOOTER ==================== -->
-  <footer class="mt-auto border-t border-slate-800/80 bg-[#090d16] py-6 text-xs text-slate-500">
+  <footer class="mt-auto border-t border-slate-800/80 bg-[#080c14] py-6 text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-2">
         <div class="w-2 h-2 rounded-full bg-brand-500"></div>
         <span>Built for Fast Picture Posting, Organizing & Instant Sharing</span>
       </div>
       <div class="flex items-center gap-4">
-        <a href="https://github.com/Oladizz" target="_blank" class="hover:text-slate-300 transition-colors flex items-center gap-1">
-          <i data-lucide="github" class="w-3.5 h-3.5"></i> GitHub
-        </a>
-        <a href="https://x.com/Oladizz01" target="_blank" class="hover:text-slate-300 transition-colors flex items-center gap-1">
-          <i data-lucide="twitter" class="w-3.5 h-3.5"></i> X (Twitter)
-        </a>
         <button onclick="exportBackupData()" class="hover:text-slate-300 transition-colors flex items-center gap-1">
-          <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Backup
+          <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Backup (JSON)
+        </button>
+        <button onclick="openSettingsModal()" class="hover:text-slate-300 transition-colors flex items-center gap-1">
+          <i data-lucide="settings" class="w-3.5 h-3.5"></i> Storage Settings
         </button>
       </div>
     </div>
@@ -362,7 +461,7 @@
 
   <!-- ==================== UPLOAD MODAL ==================== -->
   <div id="uploadModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-    <div class="relative w-full max-w-2xl bg-[#111827] border border-slate-700/80 rounded-2xl shadow-2xl p-6 overflow-hidden">
+    <div class="relative w-full max-w-2xl bg-[#0f1623] border border-slate-700/80 rounded-2xl shadow-2xl p-6 overflow-hidden">
       
       <!-- Modal Header -->
       <div class="flex items-center justify-between pb-4 border-b border-slate-800">
@@ -375,7 +474,7 @@
             <p class="text-xs text-slate-400">Upload to decentralized IPFS with instant shareable links</p>
           </div>
         </div>
-        <button onclick="closeUploadModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+        <button onclick="closeUploadModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -387,19 +486,19 @@
         <div 
           id="dropzone" 
           onclick="document.getElementById('fileInput').click()"
-          class="relative border-2 border-dashed border-slate-700 hover:border-brand-500/80 rounded-xl p-6 text-center cursor-pointer transition-colors bg-slate-900/40 hover:bg-slate-900/80 group"
+          class="relative border-2 border-dashed border-slate-700 hover:border-brand-500 rounded-xl p-6 text-center cursor-pointer transition-all bg-slate-900/50 hover:bg-slate-900/90 group"
         >
           <input type="file" id="fileInput" accept="image/*" multiple class="hidden" onchange="handleFileSelect(event)">
           
           <div id="dropzonePrompt" class="flex flex-col items-center justify-center gap-2">
             <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-brand-400 group-hover:scale-110 transition-all">
-              <i data-lucide="image" class="w-6 h-6"></i>
+              <i data-lucide="image-plus" class="w-6 h-6"></i>
             </div>
             <div>
               <p class="text-sm font-semibold text-slate-200">
                 <span class="text-brand-400">Click to choose image(s)</span> or drag & drop here
               </p>
-              <p class="text-xs text-slate-500 mt-0.5">PNG, JPG, WEBP, GIF, SVG up to 50MB</p>
+              <p class="text-xs text-slate-500 mt-0.5">PNG, JPG, WEBP, GIF, SVG up to 50MB per file</p>
             </div>
           </div>
 
@@ -417,22 +516,20 @@
             <input 
               type="text" 
               id="uploadTitle" 
-              placeholder="e.g. Base Ecosystem Showcase, New UI Mockup..." 
+              placeholder="e.g. Base Ecosystem Architecture, High-res Screenshot..." 
               class="w-full bg-slate-800/90 text-sm text-slate-100 placeholder-slate-500 px-3.5 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500"
             >
           </div>
 
           <!-- Album Selector -->
           <div class="space-y-1.5">
-            <label class="text-xs font-semibold text-slate-300">Organize in Album</label>
-            <div class="flex gap-2">
-              <select 
-                id="uploadAlbum" 
-                class="flex-1 bg-slate-800/90 text-sm text-slate-100 px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500"
-              >
-                <!-- Populated dynamically -->
-              </select>
-            </div>
+            <label class="text-xs font-semibold text-slate-300">Album / Collection</label>
+            <select 
+              id="uploadAlbum" 
+              class="w-full bg-slate-800/90 text-sm text-slate-100 px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500 cursor-pointer"
+            >
+              <!-- Populated dynamically -->
+            </select>
           </div>
 
           <!-- Visibility Choice (Option 3 requested by user) -->
@@ -440,9 +537,9 @@
             <label class="text-xs font-semibold text-slate-300">Sharing Visibility</label>
             <select 
               id="uploadVisibility" 
-              class="w-full bg-slate-800/90 text-sm text-slate-100 px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500"
+              class="w-full bg-slate-800/90 text-sm text-slate-100 px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500 cursor-pointer"
             >
-              <option value="public">🌟 Public Showcase (Visible on Portfolio Grid)</option>
+              <option value="public">🌟 Public Showcase (Visible in Gallery Grid)</option>
               <option value="unlisted">🔒 Unlisted (Only Accessible via Direct Share Link)</option>
             </select>
           </div>
@@ -451,12 +548,12 @@
           <div class="space-y-1.5 sm:col-span-2">
             <div class="flex items-center justify-between">
               <label class="text-xs font-semibold text-slate-300">Tags (comma separated)</label>
-              <span class="text-[11px] text-slate-500">e.g. portfolio, crypto, screenshot, mockups</span>
+              <span class="text-[11px] text-slate-500">e.g. portfolio, crypto, ui, screenshot</span>
             </div>
             <input 
               type="text" 
               id="uploadTags" 
-              placeholder="crypto, web3, ui, design, artwork" 
+              placeholder="web3, design, screenshot, avatar" 
               class="w-full bg-slate-800/90 text-sm text-slate-100 placeholder-slate-500 px-3.5 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500"
             >
           </div>
@@ -478,14 +575,14 @@
           <button 
             type="button" 
             onclick="closeUploadModal()" 
-            class="px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            class="px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
           >
             Cancel
           </button>
           <button 
             type="submit" 
             id="uploadSubmitBtn"
-            class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/25 transition-all"
+            class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/25 transition-all cursor-pointer"
           >
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>Upload & Get Links</span>
@@ -498,13 +595,13 @@
 
   <!-- ==================== NEW ALBUM MODAL ==================== -->
   <div id="newAlbumModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-    <div class="relative w-full max-w-md bg-[#111827] border border-slate-700/80 rounded-2xl shadow-2xl p-6">
+    <div class="relative w-full max-w-md bg-[#0f1623] border border-slate-700/80 rounded-2xl shadow-2xl p-6">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 class="text-base font-bold text-white flex items-center gap-2">
           <i data-lucide="folder-plus" class="w-5 h-5 text-brand-400"></i>
           Create New Album
         </h3>
-        <button onclick="closeNewAlbumModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+        <button onclick="closeNewAlbumModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -516,7 +613,7 @@
             type="text" 
             id="newAlbumName" 
             required 
-            placeholder="e.g. Base Project Alpha, Client Work..." 
+            placeholder="e.g. Client Work, Wallpapers, Screenshots..." 
             class="w-full bg-slate-800 text-sm text-slate-100 px-3.5 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500"
           >
         </div>
@@ -530,55 +627,61 @@
           >
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeNewAlbumModal()" class="px-4 py-2 text-xs text-slate-400 hover:text-white">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold">Create Album</button>
+          <button type="button" onclick="closeNewAlbumModal()" class="px-4 py-2 text-xs text-slate-400 hover:text-white cursor-pointer">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold cursor-pointer">Create Album</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ==================== SHARE MODAL (For sharing with anyone / AI) ==================== -->
-  <div id="shareModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-    <div class="relative w-full max-w-lg bg-[#111827] border border-slate-700/80 rounded-2xl shadow-2xl p-6">
+  <!-- ==================== SHARE MODAL (With QR Code + 1-Click Copy) ==================== -->
+  <div id="shareModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-xl bg-[#0f1623] border border-slate-700/80 rounded-2xl shadow-2xl p-6">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center">
             <i data-lucide="share-2" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 class="text-sm font-bold text-white">Share Picture</h3>
-            <p class="text-xs text-slate-400" id="shareModalTitle">Permanent Web & IPFS links</p>
+            <h3 class="text-sm font-bold text-white">Share Picture with Anyone</h3>
+            <p class="text-xs text-slate-400">Direct link, raw IPFS file, and mobile QR code</p>
           </div>
         </div>
-        <button onclick="closeShareModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+        <button onclick="closeShareModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
       <div class="mt-4 space-y-4">
         
-        <!-- Thumbnail preview -->
-        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800">
-          <img id="shareModalImgPreview" src="" alt="Thumbnail" class="w-14 h-14 rounded-lg object-cover bg-slate-800 shrink-0">
-          <div class="overflow-hidden">
-            <h4 id="shareModalPhotoName" class="text-xs font-semibold text-slate-200 truncate">Image Name</h4>
-            <div class="flex items-center gap-2 mt-1">
-              <span id="shareModalVisibilityBadge" class="text-[10px] px-2 py-0.5 rounded-full font-medium">Public</span>
-              <span id="shareModalDimensionsBadge" class="text-[10px] text-slate-500 font-mono">1920x1080</span>
+        <!-- Preview & QR Code Header Card -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+          <img id="shareModalImgPreview" src="" alt="Thumbnail" class="w-20 h-20 rounded-xl object-cover bg-slate-800 shrink-0 border border-slate-700 shadow-md">
+          <div class="flex-1 overflow-hidden text-center sm:text-left">
+            <h4 id="shareModalPhotoName" class="text-sm font-bold text-white truncate">Image Name</h4>
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-1">
+              <span id="shareModalVisibilityBadge" class="text-[10px] px-2 py-0.5 rounded-full font-semibold">Public</span>
+              <span id="shareModalDimensionsBadge" class="text-[10px] text-slate-400 font-mono">1920x1080</span>
             </div>
+            <p class="text-[11px] text-slate-400 mt-1">Anyone with the link can view & download in high resolution.</p>
+          </div>
+          <!-- Mobile QR Code -->
+          <div class="shrink-0 flex flex-col items-center bg-white p-1.5 rounded-xl shadow-md" title="Scan to open on phone">
+            <img id="shareModalQrCode" src="" alt="QR Code" class="w-16 h-16">
+            <span class="text-[9px] text-slate-800 font-bold mt-0.5">Scan to open</span>
           </div>
         </div>
 
-        <!-- 1. Direct Page Share Link (For anyone, AI, clients) -->
+        <!-- 1. Interactive Viewer Page Link (For anyone, AI, clients) -->
         <div class="space-y-1">
           <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
             <span>🔗 Interactive Viewer Page Link</span>
             <span class="text-[10px] text-brand-400">Open in any browser / share to anyone</span>
           </label>
           <div class="flex items-center gap-1.5">
-            <input type="text" id="sharePageUrlInput" readonly class="flex-1 bg-slate-800 text-xs font-mono text-slate-300 px-3 py-2 rounded-xl border border-slate-700 select-all">
-            <button onclick="copyInputVal('sharePageUrlInput', 'Viewer page link copied!')" class="px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shrink-0 flex items-center gap-1">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
+            <input type="text" id="sharePageUrlInput" readonly class="flex-1 bg-slate-800/90 text-xs font-mono text-slate-200 px-3 py-2 rounded-xl border border-slate-700 select-all">
+            <button onclick="copyInputVal('sharePageUrlInput', 'Viewer page link copied!')" class="px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shrink-0 flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Link
             </button>
           </div>
         </div>
@@ -586,12 +689,12 @@
         <!-- 2. Direct Raw Image URL -->
         <div class="space-y-1">
           <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
-            <span>🖼️ Direct Image File URL (IPFS Gateway)</span>
-            <span class="text-[10px] text-slate-400">Direct raw file access</span>
+            <span>🖼️ Direct Raw Image URL (IPFS Gateway)</span>
+            <span class="text-[10px] text-slate-400">Permanent decentralized file</span>
           </label>
           <div class="flex items-center gap-1.5">
-            <input type="text" id="shareRawUrlInput" readonly class="flex-1 bg-slate-800 text-xs font-mono text-slate-300 px-3 py-2 rounded-xl border border-slate-700 select-all">
-            <button onclick="copyInputVal('shareRawUrlInput', 'Raw image URL copied!')" class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold shrink-0 flex items-center gap-1">
+            <input type="text" id="shareRawUrlInput" readonly class="flex-1 bg-slate-800/90 text-xs font-mono text-slate-200 px-3 py-2 rounded-xl border border-slate-700 select-all">
+            <button onclick="copyInputVal('shareRawUrlInput', 'Raw image URL copied!')" class="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold shrink-0 flex items-center gap-1.5 cursor-pointer">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
             </button>
           </div>
@@ -603,20 +706,20 @@
             <span>📝 Markdown Embed (GitHub / Docs / Discord)</span>
           </label>
           <div class="flex items-center gap-1.5">
-            <input type="text" id="shareMarkdownInput" readonly class="flex-1 bg-slate-800 text-xs font-mono text-slate-300 px-3 py-2 rounded-xl border border-slate-700 select-all">
-            <button onclick="copyInputVal('shareMarkdownInput', 'Markdown code copied!')" class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold shrink-0 flex items-center gap-1">
+            <input type="text" id="shareMarkdownInput" readonly class="flex-1 bg-slate-800/90 text-xs font-mono text-slate-200 px-3 py-2 rounded-xl border border-slate-700 select-all">
+            <button onclick="copyInputVal('shareMarkdownInput', 'Markdown code copied!')" class="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold shrink-0 flex items-center gap-1.5 cursor-pointer">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
             </button>
           </div>
         </div>
 
-        <!-- 4. Quick Actions (Native Share + Download) -->
+        <!-- Actions -->
         <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
-          <button id="nativeShareBtn" onclick="triggerNativeShare()" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 flex items-center justify-center gap-1.5">
-            <i data-lucide="share" class="w-3.5 h-3.5"></i> Native Share (Phone/Apps)
+          <button id="nativeShareBtn" onclick="triggerNativeShare()" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 flex items-center justify-center gap-1.5 cursor-pointer">
+            <i data-lucide="share" class="w-3.5 h-3.5 text-brand-400"></i> Native Share (Phone / Apps)
           </button>
-          <button id="shareDownloadBtn" onclick="downloadCurrentSharePhoto()" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 flex items-center justify-center gap-1.5">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i> Download Original
+          <button id="shareDownloadBtn" onclick="downloadCurrentSharePhoto()" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 flex items-center justify-center gap-1.5 cursor-pointer">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-brand-400"></i> Download Original
           </button>
         </div>
 
@@ -634,25 +737,25 @@
         <span id="lightboxBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium">Public</span>
       </div>
       <div class="flex items-center gap-1.5">
-        <button onclick="zoomLightbox(-0.2)" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg" title="Zoom Out (-)">
+        <button onclick="zoomLightbox(-0.2)" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer" title="Zoom Out (-)">
           <i data-lucide="zoom-out" class="w-4 h-4"></i>
         </button>
-        <button onclick="resetLightboxZoom()" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg" title="Reset Zoom">
+        <button onclick="resetLightboxZoom()" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer" title="Reset Zoom">
           <i data-lucide="maximize" class="w-4 h-4"></i>
         </button>
-        <button onclick="zoomLightbox(0.2)" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg" title="Zoom In (+)">
+        <button onclick="zoomLightbox(0.2)" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer" title="Zoom In (+)">
           <i data-lucide="zoom-in" class="w-4 h-4"></i>
         </button>
-        <button onclick="rotateLightbox()" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg" title="Rotate (90°)">
+        <button onclick="rotateLightbox()" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer" title="Rotate (90°)">
           <i data-lucide="rotate-cw" class="w-4 h-4"></i>
         </button>
-        <button onclick="shareFromLightbox()" class="p-2 text-brand-400 hover:text-white hover:bg-brand-500/20 rounded-lg" title="Share Photo">
+        <button onclick="shareFromLightbox()" class="p-2 text-brand-400 hover:text-white hover:bg-brand-500/20 rounded-lg cursor-pointer" title="Share Photo">
           <i data-lucide="share-2" class="w-4 h-4"></i>
         </button>
-        <button onclick="downloadFromLightbox()" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg" title="Download">
+        <button onclick="downloadFromLightbox()" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer" title="Download">
           <i data-lucide="download" class="w-4 h-4"></i>
         </button>
-        <button onclick="closeLightbox()" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg ml-2" title="Close (ESC)">
+        <button onclick="closeLightbox()" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg ml-2 cursor-pointer" title="Close (ESC)">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -661,7 +764,7 @@
     <!-- Main Viewer Stage -->
     <div class="flex-1 relative flex items-center justify-center p-4 overflow-hidden select-none" id="lightboxStage">
       <!-- Prev Button -->
-      <button onclick="navigateLightbox(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white shadow-xl transition-all">
+      <button onclick="navigateLightbox(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white shadow-xl transition-all cursor-pointer">
         <i data-lucide="chevron-left" class="w-6 h-6"></i>
       </button>
 
@@ -674,7 +777,7 @@
       >
 
       <!-- Next Button -->
-      <button onclick="navigateLightbox(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white shadow-xl transition-all">
+      <button onclick="navigateLightbox(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-slate-900/80 hover:bg-brand-600 text-white shadow-xl transition-all cursor-pointer">
         <i data-lucide="chevron-right" class="w-6 h-6"></i>
       </button>
     </div>
@@ -698,13 +801,13 @@
 
   <!-- ==================== EDIT PHOTO MODAL ==================== -->
   <div id="editModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-    <div class="relative w-full max-w-md bg-[#111827] border border-slate-700/80 rounded-2xl shadow-2xl p-6">
+    <div class="relative w-full max-w-md bg-[#0f1623] border border-slate-700/80 rounded-2xl shadow-2xl p-6">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 class="text-base font-bold text-white flex items-center gap-2">
           <i data-lucide="edit-3" class="w-4 h-4 text-brand-400"></i>
           Edit Picture Details
         </h3>
-        <button onclick="closeEditModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+        <button onclick="closeEditModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -719,12 +822,12 @@
 
         <div>
           <label class="text-xs font-semibold text-slate-300 block mb-1">Album</label>
-          <select id="editPhotoAlbum" class="w-full bg-slate-800 text-sm text-slate-100 px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500"></select>
+          <select id="editPhotoAlbum" class="w-full bg-slate-800 text-sm text-slate-100 px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500 cursor-pointer"></select>
         </div>
 
         <div>
           <label class="text-xs font-semibold text-slate-300 block mb-1">Visibility</label>
-          <select id="editPhotoVisibility" class="w-full bg-slate-800 text-sm text-slate-100 px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500">
+          <select id="editPhotoVisibility" class="w-full bg-slate-800 text-sm text-slate-100 px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500 cursor-pointer">
             <option value="public">🌟 Public Showcase</option>
             <option value="unlisted">🔒 Unlisted (Direct Share Only)</option>
           </select>
@@ -736,27 +839,27 @@
         </div>
 
         <div class="flex justify-between items-center pt-2">
-          <button type="button" onclick="deleteCurrentEditPhoto()" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1">
+          <button type="button" onclick="deleteCurrentEditPhoto()" class="text-xs text-rose-400 hover:text-rose-300 font-medium flex items-center gap-1 cursor-pointer">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete Photo
           </button>
           <div class="flex gap-2">
-            <button type="button" onclick="closeEditModal()" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white">Cancel</button>
-            <button type="submit" class="px-4 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold">Save Changes</button>
+            <button type="button" onclick="closeEditModal()" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white cursor-pointer">Cancel</button>
+            <button type="submit" class="px-4 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold cursor-pointer">Save Changes</button>
           </div>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ==================== SETTINGS & CLOUD SYNC MODAL ==================== -->
+  <!-- ==================== SETTINGS MODAL ==================== -->
   <div id="settingsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-    <div class="relative w-full max-w-lg bg-[#111827] border border-slate-700/80 rounded-2xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
+    <div class="relative w-full max-w-lg bg-[#0f1623] border border-slate-700/80 rounded-2xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 class="text-base font-bold text-white flex items-center gap-2">
           <i data-lucide="cloud" class="w-5 h-5 text-brand-400"></i>
-          Settings & Storage Backends
+          Settings & Cloud Storage
         </h3>
-        <button onclick="closeSettingsModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+        <button onclick="closeSettingsModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -786,20 +889,6 @@
           </div>
         </div>
 
-        <!-- Firebase Firestore / Applet Config -->
-        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-              <span class="font-bold text-slate-200">Firebase Ecosystem (qryntal)</span>
-            </div>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">Active</span>
-          </div>
-          <p class="text-slate-400 text-[11px]">
-            Synced with project <code class="text-cyan-300">qryntal</code>. Storage bucket: <code class="text-cyan-300">qryntal.firebasestorage.app</code>.
-          </p>
-        </div>
-
         <!-- Backup & Migration -->
         <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
           <h4 class="font-bold text-slate-200">Data Backup & Migration</h4>
@@ -807,7 +896,7 @@
             Download a full JSON backup of your albums, tags, and photo registry or restore from an existing backup file.
           </p>
           <div class="flex items-center gap-2">
-            <button onclick="exportBackupData()" class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold flex items-center justify-center gap-1.5">
+            <button onclick="exportBackupData()" class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold flex items-center justify-center gap-1.5 cursor-pointer">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Backup (JSON)
             </button>
             <label class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold flex items-center justify-center gap-1.5 cursor-pointer">
@@ -823,7 +912,7 @@
           <p class="text-rose-400/80 text-[11px]">
             Clear local gallery cache and reset to default sample showcase photos.
           </p>
-          <button onclick="resetGalleryStorage()" class="py-1.5 px-3 rounded-lg bg-rose-900/40 hover:bg-rose-900/70 text-rose-200 font-semibold text-[11px]">
+          <button onclick="resetGalleryStorage()" class="py-1.5 px-3 rounded-lg bg-rose-900/40 hover:bg-rose-900/70 text-rose-200 font-semibold text-[11px] cursor-pointer">
             Reset Local Gallery
           </button>
         </div>
@@ -831,7 +920,7 @@
       </div>
 
       <div class="mt-5 flex justify-end gap-2 pt-3 border-t border-slate-800">
-        <button onclick="saveSettings()" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold">
+        <button onclick="saveSettings()" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold cursor-pointer">
           Save Settings
         </button>
       </div>
@@ -841,23 +930,23 @@
   <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- ==================== JAVASCRIPT APPLICATION CORE ==================== -->
+  <!-- ==================== APPLICATION CORE LOGIC ==================== -->
   <script>
-    // Constants & Configuration
+    // Pinata IPFS Credentials
     const PINATA_JWT_DEFAULT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIyZjdjYTI1Zi1jZTBlLTQ0NjctYmE0Mi1lZTI3YjU0YWE5ZDEiLCJlbWFpbCI6Im9sYWRpenouZGV2QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJmNTcwODNiNmU0OTM2NjlhZmFlZiIsInNjb3BlZEtleVNlY3JldCI6ImQ5MDBmYTNkNGZhODc5MTM1M2VkYmM3NjA2ODRkZTkxM2UyMzdmMzQ4Yjg3NzBmYmU0MjRjMTI2ZTcyMGI5ODUiLCJleHAiOjE3OTM0NDY4NTF9.MUyMHNFawG4q9h5SGuIPCezn6Q9QEZEsN8jVhLJAvsI";
     const PINATA_GATEWAY = "https://gateway.pinata.cloud/ipfs/";
-    const IPFS_IO_GATEWAY = "https://ipfs.io/ipfs/";
     
-    // Seed Sample Media
+    // Default Albums
     const DEFAULT_ALBUMS = [
-      { id: "all", name: "All Pictures", icon: "layers", count: 0 },
-      { id: "portfolio", name: "Work & Portfolio", icon: "briefcase", count: 0 },
-      { id: "design", name: "Design & UI", icon: "palette", count: 0 },
-      { id: "web3", name: "Web3 & Crypto", icon: "cpu", count: 0 },
-      { id: "screenshots", name: "Screenshots", icon: "monitor", count: 0 },
-      { id: "personal", name: "Personal", icon: "user", count: 0 }
+      { id: "all", name: "All Pictures", icon: "layers" },
+      { id: "portfolio", name: "Work & Portfolio", icon: "briefcase" },
+      { id: "design", name: "Design & UI", icon: "palette" },
+      { id: "web3", name: "Web3 & Crypto", icon: "cpu" },
+      { id: "screenshots", name: "Screenshots", icon: "monitor" },
+      { id: "personal", name: "Personal", icon: "user" }
     ];
 
+    // Default Seed Media
     const SAMPLE_MEDIA = [
       {
         id: "sample-1",
@@ -917,49 +1006,44 @@
       }
     ];
 
-    // State
+    // State Store
     let appState = {
       photos: [],
       albums: [],
       selectedAlbum: "all",
       selectedTag: null,
       searchQuery: "",
-      visibilityFilter: "all", // "all", "public", "unlisted"
-      sortBy: "newest",        // "newest", "oldest", "title", "size"
-      layoutMode: "masonry",   // "masonry", "grid", "list"
+      visibilityFilter: "all",
+      sortBy: "newest",
+      layoutMode: "masonry",
       activeLightboxIndex: -1,
       lightboxZoom: 1,
       lightboxRotate: 0,
       activeSharePhotoId: null,
-      pendingUploadFiles: []
+      pendingUploadFiles: [],
+      selectedPhotoIds: new Set()
     };
 
     // Initialize App
     function initApp() {
-      // Load saved state
       loadStorageData();
 
-      // Setup JWT in settings input
       const savedJwt = localStorage.getItem("oladizz_pinata_jwt") || PINATA_JWT_DEFAULT;
       const jwtInput = document.getElementById("pinataJwtInput");
       if (jwtInput) jwtInput.value = savedJwt;
 
-      // Check URL parameters for direct share link (e.g. ?photo=ID or #view=ID)
       handleUrlRouting();
-
-      // Render components
+      updateStats();
       renderAlbums();
       renderTags();
       renderGallery();
-
-      // Setup Global Keyboard Shortcuts
       setupKeyboardListeners();
+      setupFullWindowDragDrop();
 
-      // Refresh Lucide icons
       lucide.createIcons();
     }
 
-    // Load & Save Data in LocalStorage
+    // Load & Save
     function loadStorageData() {
       try {
         const storedPhotos = localStorage.getItem("oladizz_gallery_photos");
@@ -986,7 +1070,26 @@
       }
     }
 
-    // URL Routing for Direct Photo Sharing (Allows anyone or AI to view directly!)
+    // Update Top Stat Widgets
+    function updateStats() {
+      const statPhotos = document.getElementById("statTotalPhotos");
+      const statAlbums = document.getElementById("statTotalAlbums");
+      const statTags = document.getElementById("statTotalTags");
+      const statStorage = document.getElementById("statTotalStorage");
+
+      if (statPhotos) statPhotos.innerText = appState.photos.length;
+      if (statAlbums) statAlbums.innerText = appState.albums.filter(a => a.id !== 'all').length;
+
+      // Unique tags
+      const uniqueTags = new Set();
+      appState.photos.forEach(p => (p.tags || []).forEach(t => uniqueTags.add(t.toLowerCase())));
+      if (statTags) statTags.innerText = uniqueTags.size;
+
+      const totalBytes = appState.photos.reduce((sum, p) => sum + (p.size || 0), 0);
+      if (statStorage) statStorage.innerText = formatFileSize(totalBytes);
+    }
+
+    // URL Routing for Direct Sharing
     function handleUrlRouting() {
       const urlParams = new URLSearchParams(window.location.search);
       const hash = window.location.hash;
@@ -1000,7 +1103,6 @@
       if (photoIdToOpen) {
         const photo = appState.photos.find(p => p.id === photoIdToOpen);
         if (photo) {
-          // Open direct share viewer modal or lightbox
           setTimeout(() => {
             openShareModal(photo.id);
           }, 300);
@@ -1008,12 +1110,11 @@
       }
     }
 
-    // Render Albums Ribbon
+    // Render Albums
     function renderAlbums() {
       const ribbon = document.getElementById("albumsRibbon");
       if (!ribbon) return;
 
-      // Calculate counts per album
       const counts = { all: appState.photos.length };
       appState.photos.forEach(p => {
         counts[p.album] = (counts[p.album] || 0) + 1;
@@ -1026,9 +1127,9 @@
         return `
           <button 
             onclick="selectAlbum('${album.id}')"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               isActive 
-                ? 'bg-brand-600 text-white shadow-md shadow-brand-500/20' 
+                ? 'bg-brand-600 text-white shadow-md shadow-brand-500/25 ring-1 ring-brand-400/40' 
                 : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border border-slate-700/60'
             }"
           >
@@ -1041,7 +1142,6 @@
         `;
       }).join('');
 
-      // Populate upload & edit album select dropdowns
       const uploadSelect = document.getElementById("uploadAlbum");
       const editSelect = document.getElementById("editPhotoAlbum");
       const selectableAlbums = appState.albums.filter(a => a.id !== 'all');
@@ -1053,12 +1153,11 @@
       lucide.createIcons();
     }
 
-    // Render Tags Ribbon
+    // Render Tags
     function renderTags() {
       const tagsList = document.getElementById("tagsList");
       if (!tagsList) return;
 
-      // Extract unique tags with counts
       const tagCounts = {};
       appState.photos.forEach(p => {
         if (p.tags && Array.isArray(p.tags)) {
@@ -1081,9 +1180,9 @@
         return `
           <button 
             onclick="toggleTagFilter('${tag}')"
-            class="px-2 py-0.5 rounded-md text-[11px] font-mono transition-all ${
+            class="px-2 py-0.5 rounded-md text-[11px] font-mono transition-all cursor-pointer ${
               isSelected 
-                ? 'bg-brand-500 text-white font-bold' 
+                ? 'bg-brand-500 text-white font-bold ring-2 ring-brand-400/50' 
                 : 'bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 border border-slate-700/50'
             }"
           >
@@ -1093,26 +1192,19 @@
       }).join('');
     }
 
-    // Filter, Sort, and Search Pipeline
+    // Filter Pipeline
     function getFilteredPhotos() {
       return appState.photos.filter(photo => {
-        // 1. Album Filter
         if (appState.selectedAlbum !== "all" && photo.album !== appState.selectedAlbum) {
           return false;
         }
-
-        // 2. Tag Filter
         if (appState.selectedTag) {
           const hasTag = photo.tags && photo.tags.some(t => t.toLowerCase() === appState.selectedTag.toLowerCase());
           if (!hasTag) return false;
         }
-
-        // 3. Visibility Filter (Option 3 requested)
         if (appState.visibilityFilter !== "all" && photo.visibility !== appState.visibilityFilter) {
           return false;
         }
-
-        // 4. Search Query (Title, tags, album, ipfsHash)
         if (appState.searchQuery) {
           const q = appState.searchQuery.toLowerCase();
           const matchTitle = (photo.title || "").toLowerCase().includes(q);
@@ -1121,24 +1213,17 @@
           const matchHash = (photo.ipfsHash || "").toLowerCase().includes(q);
           if (!matchTitle && !matchAlbum && !matchTags && !matchHash) return false;
         }
-
         return true;
       }).sort((a, b) => {
-        // Sort
-        if (appState.sortBy === "newest") {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        } else if (appState.sortBy === "oldest") {
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        } else if (appState.sortBy === "title") {
-          return (a.title || "").localeCompare(b.title || "");
-        } else if (appState.sortBy === "size") {
-          return (b.size || 0) - (a.size || 0);
-        }
+        if (appState.sortBy === "newest") return new Date(b.createdAt) - new Date(a.createdAt);
+        if (appState.sortBy === "oldest") return new Date(a.createdAt) - new Date(b.createdAt);
+        if (appState.sortBy === "title") return (a.title || "").localeCompare(b.title || "");
+        if (appState.sortBy === "size") return (b.size || 0) - (a.size || 0);
         return 0;
       });
     }
 
-    // Render Gallery Content
+    // Render Gallery
     function renderGallery() {
       const container = document.getElementById("galleryContainer");
       const emptyState = document.getElementById("emptyState");
@@ -1149,13 +1234,10 @@
 
       const filtered = getFilteredPhotos();
 
-      // Update counters
       if (counter) counter.innerText = `Showing ${filtered.length} of ${appState.photos.length} pictures`;
-      
       const totalBytes = appState.photos.reduce((sum, p) => sum + (p.size || 0), 0);
       if (storageCounter) storageCounter.innerText = `${formatFileSize(totalBytes)} total`;
 
-      // Update Filter Banner
       const filtersActive = appState.selectedAlbum !== "all" || appState.selectedTag || appState.searchQuery || appState.visibilityFilter !== "all";
       if (filterBanner) {
         if (filtersActive) {
@@ -1171,7 +1253,6 @@
         }
       }
 
-      // Empty State Check
       if (filtered.length === 0) {
         container.innerHTML = "";
         emptyState.classList.remove("hidden");
@@ -1182,45 +1263,35 @@
         emptyState.classList.remove("flex");
       }
 
-      // Update Layout View Button Active States
       updateLayoutButtons();
 
-      // Render based on Layout Mode
       if (appState.layoutMode === "masonry") {
-        renderMasonryView(filtered, container);
+        container.className = "masonry-grid";
+        container.innerHTML = filtered.map(p => createPhotoCardHtml(p, false)).join('');
       } else if (appState.layoutMode === "grid") {
-        renderGridView(filtered, container);
+        container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4";
+        container.innerHTML = filtered.map(p => createPhotoCardHtml(p, true)).join('');
       } else if (appState.layoutMode === "list") {
         renderListView(filtered, container);
       }
 
+      updateBatchBar();
       lucide.createIcons();
     }
 
-    // Layout 1: Masonry Grid
-    function renderMasonryView(photos, container) {
-      container.className = "masonry-grid";
-      container.innerHTML = photos.map(photo => createPhotoCardHtml(photo, false)).join('');
-    }
-
-    // Layout 2: Square Grid
-    function renderGridView(photos, container) {
-      container.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4";
-      container.innerHTML = photos.map(photo => createPhotoCardHtml(photo, true)).join('');
-    }
-
-    // Photo Card HTML Generator
+    // Card Generator
     function createPhotoCardHtml(photo, isSquare) {
       const isUnlisted = photo.visibility === 'unlisted';
+      const isSelected = appState.selectedPhotoIds.has(photo.id);
       const imgClass = isSquare ? "w-full h-56 object-cover" : "w-full h-auto object-cover";
       const tagsHtml = (photo.tags || []).slice(0, 3).map(t => 
         `<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-900/80 text-slate-300 font-mono">#${t}</span>`
       ).join('');
 
       return `
-        <div class="${appState.layoutMode === 'masonry' ? 'masonry-item' : ''} group relative rounded-2xl bg-dark-card border border-dark-border overflow-hidden hover:border-brand-500/50 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-300 flex flex-col">
+        <div class="${appState.layoutMode === 'masonry' ? 'masonry-item' : ''} group relative rounded-2xl glass-card overflow-hidden transition-all duration-300 flex flex-col ${isSelected ? 'ring-2 ring-brand-500' : ''}">
           
-          <!-- Image with Overlay -->
+          <!-- Image Stage -->
           <div class="relative overflow-hidden cursor-pointer" onclick="openLightbox('${photo.id}')">
             <img 
               src="${photo.thumbUrl || photo.url}" 
@@ -1232,25 +1303,35 @@
             <!-- Badges Top -->
             <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
               <!-- Visibility Pill -->
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 shadow-md backdrop-blur-md ${
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md backdrop-blur-md ${
                 isUnlisted 
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
-                  : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
+                  : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
               }">
                 <i data-lucide="${isUnlisted ? 'lock' : 'globe'}" class="w-3 h-3"></i>
                 ${isUnlisted ? 'Unlisted' : 'Public'}
               </span>
 
               <!-- Album Pill -->
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-black/60 text-slate-200 border border-white/10 backdrop-blur-md">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-black/70 text-slate-200 border border-white/10 backdrop-blur-md">
                 ${photo.album || 'General'}
               </span>
             </div>
 
-            <!-- Quick Action Hover Overlay -->
+            <!-- Checkbox for Batch Selection -->
+            <div class="absolute bottom-2.5 left-2.5 opacity-0 group-hover:opacity-100 transition-opacity z-10" onclick="event.stopPropagation()">
+              <input 
+                type="checkbox" 
+                ${isSelected ? 'checked' : ''} 
+                onchange="toggleSelectPhoto('${photo.id}')"
+                class="w-4 h-4 rounded bg-slate-900 text-brand-500 focus:ring-brand-500 border-slate-700 cursor-pointer"
+              >
+            </div>
+
+            <!-- Hover Scrim -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end p-3 pointer-events-none">
-              <span class="text-xs text-white/90 flex items-center gap-1 font-medium">
-                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-brand-400"></i> Click to enlarge
+              <span class="text-xs text-white/90 flex items-center gap-1.5 font-semibold ml-6">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-brand-400"></i> Click to view
               </span>
             </div>
           </div>
@@ -1258,15 +1339,15 @@
           <!-- Card Body -->
           <div class="p-3.5 flex flex-col flex-1 justify-between gap-2.5">
             <div>
-              <h3 class="font-semibold text-sm text-slate-100 truncate group-hover:text-brand-300 transition-colors" title="${photo.title || 'Untitled'}">
+              <h3 class="font-bold text-sm text-slate-100 truncate group-hover:text-brand-300 transition-colors" title="${photo.title || 'Untitled'}">
                 ${photo.title || 'Untitled Picture'}
               </h3>
               
               <!-- Meta Stats -->
               <div class="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
-                <span>${formatFileSize(photo.size)}</span>
+                <span class="font-mono">${formatFileSize(photo.size)}</span>
                 <span>•</span>
-                <span>${photo.format || 'IMG'}</span>
+                <span class="font-bold">${photo.format || 'IMG'}</span>
                 <span>•</span>
                 <span>${formatDate(photo.createdAt)}</span>
               </div>
@@ -1277,26 +1358,26 @@
               ${tagsHtml}
             </div>
 
-            <!-- Bottom Actions Bar -->
+            <!-- Actions Bar -->
             <div class="flex items-center justify-between pt-2.5 border-t border-slate-800/80">
               <div class="flex items-center gap-1">
                 <button 
                   onclick="openShareModal('${photo.id}')" 
-                  class="p-1.5 rounded-lg bg-slate-800/80 hover:bg-brand-600 text-slate-300 hover:text-white transition-colors"
+                  class="p-1.5 rounded-lg bg-brand-500/20 hover:bg-brand-500 text-brand-300 hover:text-white transition-colors cursor-pointer"
                   title="Share Link with Anyone"
                 >
                   <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
                 </button>
                 <button 
                   onclick="copyDirectImageLink('${photo.id}')" 
-                  class="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                  class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
                   title="Copy Direct Image URL"
                 >
                   <i data-lucide="link" class="w-3.5 h-3.5"></i>
                 </button>
                 <button 
                   onclick="downloadPhoto('${photo.id}')" 
-                  class="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                  class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
                   title="Download File"
                 >
                   <i data-lucide="download" class="w-3.5 h-3.5"></i>
@@ -1306,14 +1387,14 @@
               <div class="flex items-center gap-1">
                 <button 
                   onclick="openEditModal('${photo.id}')" 
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
                   title="Edit Info"
                 >
                   <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                 </button>
                 <button 
                   onclick="deletePhoto('${photo.id}')" 
-                  class="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                  class="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                   title="Delete"
                 >
                   <i data-lucide="trash" class="w-3.5 h-3.5"></i>
@@ -1326,27 +1407,38 @@
       `;
     }
 
-    // Layout 3: Detailed List View
+    // Detailed List View
     function renderListView(photos, container) {
       container.className = "space-y-2";
       container.innerHTML = `
-        <div class="overflow-x-auto rounded-2xl border border-dark-border bg-dark-surface">
+        <div class="overflow-x-auto rounded-2xl border border-slate-800 bg-[#0f1623]/90">
           <table class="w-full text-left text-xs text-slate-300">
             <thead class="bg-slate-900/80 text-[11px] text-slate-400 uppercase tracking-wider border-b border-slate-800">
               <tr>
-                <th class="p-3.5 pl-4">Photo</th>
+                <th class="p-3.5 pl-4 w-10">Select</th>
+                <th class="p-3.5">Photo</th>
                 <th class="p-3.5">Title</th>
                 <th class="p-3.5">Album</th>
                 <th class="p-3.5">Visibility</th>
-                <th class="p-3.5">Size / Type</th>
+                <th class="p-3.5">Size / Format</th>
                 <th class="p-3.5">Date Added</th>
                 <th class="p-3.5 pr-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-800/60 font-sans">
-              ${photos.map(photo => `
-                <tr class="hover:bg-slate-800/40 transition-colors group">
+              ${photos.map(photo => {
+                const isSelected = appState.selectedPhotoIds.has(photo.id);
+                return `
+                <tr class="hover:bg-slate-800/40 transition-colors group ${isSelected ? 'bg-brand-500/5' : ''}">
                   <td class="p-3 pl-4">
+                    <input 
+                      type="checkbox" 
+                      ${isSelected ? 'checked' : ''} 
+                      onchange="toggleSelectPhoto('${photo.id}')"
+                      class="w-4 h-4 rounded bg-slate-900 text-brand-500 focus:ring-brand-500 border-slate-700 cursor-pointer"
+                    >
+                  </td>
+                  <td class="p-3">
                     <img 
                       src="${photo.thumbUrl || photo.url}" 
                       alt="" 
@@ -1355,7 +1447,7 @@
                     >
                   </td>
                   <td class="p-3 font-semibold text-slate-200">
-                    <div class="truncate max-w-xs cursor-pointer hover:text-brand-400" onclick="openLightbox('${photo.id}')">
+                    <div class="truncate max-w-xs cursor-pointer hover:text-brand-400 font-bold" onclick="openLightbox('${photo.id}')">
                       ${photo.title || 'Untitled'}
                     </div>
                     <div class="text-[10px] text-slate-500 font-mono mt-0.5 truncate max-w-xs">
@@ -1363,7 +1455,7 @@
                     </div>
                   </td>
                   <td class="p-3">
-                    <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+                    <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium">
                       ${photo.album || 'General'}
                     </span>
                   </td>
@@ -1384,29 +1476,86 @@
                   </td>
                   <td class="p-3 pr-4 text-right">
                     <div class="inline-flex items-center gap-1.5">
-                      <button onclick="openShareModal('${photo.id}')" class="p-1.5 rounded-lg bg-brand-600/20 hover:bg-brand-600 text-brand-300 hover:text-white" title="Share">
+                      <button onclick="openShareModal('${photo.id}')" class="p-1.5 rounded-lg bg-brand-600/20 hover:bg-brand-600 text-brand-300 hover:text-white cursor-pointer" title="Share">
                         <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
                       </button>
-                      <button onclick="copyDirectImageLink('${photo.id}')" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" title="Copy Link">
+                      <button onclick="copyDirectImageLink('${photo.id}')" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer" title="Copy Link">
                         <i data-lucide="link" class="w-3.5 h-3.5"></i>
                       </button>
-                      <button onclick="downloadPhoto('${photo.id}')" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" title="Download">
+                      <button onclick="downloadPhoto('${photo.id}')" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer" title="Download">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i>
                       </button>
-                      <button onclick="openEditModal('${photo.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-white" title="Edit">
+                      <button onclick="openEditModal('${photo.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-white cursor-pointer" title="Edit">
                         <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                       </button>
-                      <button onclick="deletePhoto('${photo.id}')" class="p-1.5 rounded-lg text-slate-500 hover:text-rose-400" title="Delete">
+                      <button onclick="deletePhoto('${photo.id}')" class="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 cursor-pointer" title="Delete">
                         <i data-lucide="trash" class="w-3.5 h-3.5"></i>
                       </button>
                     </div>
                   </td>
                 </tr>
-              `).join('')}
+              `;}).join('')}
             </tbody>
           </table>
         </div>
       `;
+    }
+
+    // Batch Selection Operations
+    function toggleSelectPhoto(photoId) {
+      if (appState.selectedPhotoIds.has(photoId)) {
+        appState.selectedPhotoIds.delete(photoId);
+      } else {
+        appState.selectedPhotoIds.add(photoId);
+      }
+      updateBatchBar();
+      renderGallery();
+    }
+
+    function updateBatchBar() {
+      const batchBar = document.getElementById("batchBar");
+      const countSpan = document.getElementById("batchSelectedCount");
+      if (!batchBar || !countSpan) return;
+
+      const count = appState.selectedPhotoIds.size;
+      countSpan.innerText = count;
+
+      if (count > 0) {
+        batchBar.classList.remove("hidden");
+        batchBar.classList.add("flex");
+      } else {
+        batchBar.classList.add("hidden");
+        batchBar.classList.remove("flex");
+      }
+      lucide.createIcons();
+    }
+
+    function clearBatchSelection() {
+      appState.selectedPhotoIds.clear();
+      updateBatchBar();
+      renderGallery();
+    }
+
+    function downloadBatchSelected() {
+      const ids = Array.from(appState.selectedPhotoIds);
+      ids.forEach((id, idx) => {
+        setTimeout(() => downloadPhoto(id), idx * 200);
+      });
+      showToast(`Downloading ${ids.length} pictures...`, "info");
+    }
+
+    function deleteBatchSelected() {
+      const count = appState.selectedPhotoIds.size;
+      if (!confirm(`Delete ${count} selected pictures from your vault?`)) return;
+
+      appState.photos = appState.photos.filter(p => !appState.selectedPhotoIds.has(p.id));
+      clearBatchSelection();
+      saveStorageData();
+      updateStats();
+      renderAlbums();
+      renderTags();
+      renderGallery();
+      showToast(`Deleted ${count} pictures`, "info");
     }
 
     // Switch Layout
@@ -1426,9 +1575,9 @@
       const activeClass = "bg-brand-600 text-white shadow-sm";
       const inactiveClass = "text-slate-400 hover:text-slate-200";
 
-      masonryBtn.className = `p-1.5 rounded-md transition-all ${appState.layoutMode === 'masonry' ? activeClass : inactiveClass}`;
-      gridBtn.className = `p-1.5 rounded-md transition-all ${appState.layoutMode === 'grid' ? activeClass : inactiveClass}`;
-      listBtn.className = `p-1.5 rounded-md transition-all ${appState.layoutMode === 'list' ? activeClass : inactiveClass}`;
+      masonryBtn.className = `p-1.5 rounded-md transition-all cursor-pointer ${appState.layoutMode === 'masonry' ? activeClass : inactiveClass}`;
+      gridBtn.className = `p-1.5 rounded-md transition-all cursor-pointer ${appState.layoutMode === 'grid' ? activeClass : inactiveClass}`;
+      listBtn.className = `p-1.5 rounded-md transition-all cursor-pointer ${appState.layoutMode === 'list' ? activeClass : inactiveClass}`;
     }
 
     // Filters and Actions
@@ -1493,7 +1642,6 @@
       renderGallery();
     });
 
-    // Visibility and Sort Listeners
     document.getElementById("visibilityFilter")?.addEventListener("change", (e) => {
       appState.visibilityFilter = e.target.value;
       renderGallery();
@@ -1504,7 +1652,45 @@
       renderGallery();
     });
 
-    // ==================== UPLOAD & IPFS PINNING PIPELINE ====================
+    // Full Window Drag and Drop
+    function setupFullWindowDragDrop() {
+      let dragCounter = 0;
+      const overlay = document.getElementById("fullWindowDropOverlay");
+
+      window.addEventListener("dragenter", (e) => {
+        e.preventDefault();
+        dragCounter++;
+        if (overlay) overlay.classList.remove("hidden");
+      });
+
+      window.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        dragCounter--;
+        if (dragCounter <= 0) {
+          dragCounter = 0;
+          if (overlay) overlay.classList.add("hidden");
+        }
+      });
+
+      window.addEventListener("dragover", (e) => {
+        e.preventDefault();
+      });
+
+      window.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dragCounter = 0;
+        if (overlay) overlay.classList.add("hidden");
+
+        const dt = e.dataTransfer;
+        const files = Array.from(dt.files || []).filter(f => f.type.startsWith('image/'));
+        if (files.length > 0) {
+          openUploadModal();
+          processSelectedFiles(files);
+        }
+      });
+    }
+
+    // Upload & IPFS Pinning Pipeline
     function openUploadModal() {
       document.getElementById("uploadModal")?.classList.remove("hidden");
       document.getElementById("uploadProgressBarContainer")?.classList.add("hidden");
@@ -1525,7 +1711,6 @@
       processSelectedFiles(files);
     }
 
-    // Drag and Drop listeners
     const dropzone = document.getElementById("dropzone");
     if (dropzone) {
       ['dragenter', 'dragover'].forEach(eventName => {
@@ -1556,7 +1741,6 @@
       const titleInput = document.getElementById("uploadTitle");
 
       if (files.length === 1 && titleInput && !titleInput.value) {
-        // Auto fill title from filename
         const cleanName = files[0].name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
         titleInput.value = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
       }
@@ -1565,7 +1749,7 @@
       dropPrompt.classList.add("hidden");
       previewContainer.classList.remove("hidden");
 
-      files.forEach((file, idx) => {
+      files.forEach((file) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           const div = document.createElement("div");
@@ -1615,7 +1799,6 @@
         progressText.innerText = `Pinning file ${i + 1} of ${totalFiles} to decentralized IPFS...`;
         
         try {
-          // 1. Try uploading to Pinata IPFS
           let ipfsHash = null;
           let imageUrl = null;
           
@@ -1635,9 +1818,7 @@
 
             const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
               method: "POST",
-              headers: {
-                Authorization: `Bearer ${jwt}`
-              },
+              headers: { Authorization: `Bearer ${jwt}` },
               body: formData
             });
 
@@ -1645,21 +1826,17 @@
               const data = await res.json();
               ipfsHash = data.IpfsHash;
               imageUrl = `${PINATA_GATEWAY}${ipfsHash}`;
-            } else {
-              console.warn("Pinata upload returned status:", res.status);
             }
           } catch (pinataErr) {
-            console.warn("Pinata upload failed, falling back to data URL:", pinataErr);
+            console.warn("Pinata upload fallback to local:", pinataErr);
           }
 
-          // Fallback to local Data URL if offline or IPFS error
           const dataUrl = await readFileAsDataUrl(file);
           if (!imageUrl) {
             imageUrl = dataUrl;
             ipfsHash = `local-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
           }
 
-          // Image dimensions
           const dimensions = await getImageDimensions(dataUrl);
 
           const newPhoto = {
@@ -1691,6 +1868,7 @@
       }
 
       saveStorageData();
+      updateStats();
       renderAlbums();
       renderTags();
       renderGallery();
@@ -1700,7 +1878,6 @@
 
       showToast(`Successfully posted ${uploadedCount} picture(s)!`, "success");
 
-      // Open share modal immediately for the first uploaded picture
       if (firstUploadedId) {
         openShareModal(firstUploadedId);
       }
@@ -1723,7 +1900,7 @@
       });
     }
 
-    // ==================== SHARING SUITE (Share with Anyone / AI) ====================
+    // Share Modal & QR Code
     function openShareModal(photoId) {
       const photo = appState.photos.find(p => p.id === photoId);
       if (!photo) return;
@@ -1733,6 +1910,7 @@
       const modal = document.getElementById("shareModal");
       const name = document.getElementById("shareModalPhotoName");
       const imgPreview = document.getElementById("shareModalImgPreview");
+      const qrImg = document.getElementById("shareModalQrCode");
       const visBadge = document.getElementById("shareModalVisibilityBadge");
       const dimBadge = document.getElementById("shareModalDimensionsBadge");
 
@@ -1745,14 +1923,13 @@
       dimBadge.innerText = photo.dimensions || "High Res";
 
       if (photo.visibility === 'unlisted') {
-        visBadge.className = "text-[10px] px-2 py-0.5 rounded-full font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20";
+        visBadge.className = "text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30";
         visBadge.innerText = "🔒 Unlisted (Only Accessible via Direct Link)";
       } else {
-        visBadge.className = "text-[10px] px-2 py-0.5 rounded-full font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20";
+        visBadge.className = "text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30";
         visBadge.innerText = "🌟 Public Showcase";
       }
 
-      // Generate Clean Sharing Links
       const currentUrl = window.location.href.split('#')[0].split('?')[0];
       const sharePageUrl = `${currentUrl}#view=${photo.id}`;
       const rawImageUrl = photo.url;
@@ -1762,7 +1939,11 @@
       rawInput.value = rawImageUrl;
       mdInput.value = markdownCode;
 
-      // Update URL hash without reload
+      // QR Code via clean QR server API
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(sharePageUrl)}`;
+      }
+
       window.history.replaceState(null, '', `#view=${photo.id}`);
 
       modal.classList.remove("hidden");
@@ -1834,15 +2015,13 @@
             url: shareUrl
           });
           showToast("Shared successfully!", "success");
-        } catch (e) {
-          // Cancelled or unsupported
-        }
+        } catch (e) {}
       } else {
         copyInputVal('sharePageUrlInput', 'Viewer page link copied!');
       }
     }
 
-    // ==================== LIGHTBOX VIEWER ====================
+    // Lightbox Controls
     function openLightbox(photoId) {
       const filtered = getFilteredPhotos();
       const index = filtered.findIndex(p => p.id === photoId);
@@ -1942,7 +2121,7 @@
       if (photo) downloadPhoto(photo.id);
     }
 
-    // ==================== EDIT PHOTO DETAILS ====================
+    // Edit Modal
     function openEditModal(photoId) {
       const photo = appState.photos.find(p => p.id === photoId);
       if (!photo) return;
@@ -1972,6 +2151,7 @@
       photo.tags = document.getElementById("editPhotoTags").value.split(',').map(t => t.trim().toLowerCase()).filter(t => t);
 
       saveStorageData();
+      updateStats();
       renderAlbums();
       renderTags();
       renderGallery();
@@ -1983,6 +2163,7 @@
       if (!confirm("Are you sure you want to delete this picture from your vault?")) return;
       appState.photos = appState.photos.filter(p => p.id !== photoId);
       saveStorageData();
+      updateStats();
       renderAlbums();
       renderTags();
       renderGallery();
@@ -1995,7 +2176,7 @@
       deletePhoto(id);
     }
 
-    // ==================== NEW ALBUM ====================
+    // Create Album
     function openNewAlbumModal() {
       document.getElementById("newAlbumModal")?.classList.remove("hidden");
       document.getElementById("newAlbumName")?.focus();
@@ -2019,22 +2200,16 @@
         return;
       }
 
-      appState.albums.push({
-        id: slug,
-        name: name,
-        desc: desc,
-        icon: "folder",
-        count: 0
-      });
-
+      appState.albums.push({ id: slug, name: name, desc: desc, icon: "folder" });
       saveStorageData();
+      updateStats();
       renderAlbums();
       closeNewAlbumModal();
       showToast(`Album "${name}" created!`, "success");
       selectAlbum(slug);
     }
 
-    // ==================== SETTINGS & BACKUP ====================
+    // Settings & Backup
     function openSettingsModal() {
       document.getElementById("settingsModal")?.classList.remove("hidden");
     }
@@ -2078,6 +2253,7 @@
               appState.albums = parsed.albums;
             }
             saveStorageData();
+            updateStats();
             renderAlbums();
             renderTags();
             renderGallery();
@@ -2100,6 +2276,7 @@
       appState.photos = SAMPLE_MEDIA;
       appState.albums = DEFAULT_ALBUMS;
       saveStorageData();
+      updateStats();
       renderAlbums();
       renderTags();
       renderGallery();
@@ -2107,7 +2284,7 @@
       showToast("Gallery reset to defaults", "info");
     }
 
-    // ==================== TOAST SYSTEM ====================
+    // Toast System
     function showToast(message, type = "success") {
       const container = document.getElementById("toastContainer");
       if (!container) return;
@@ -2138,7 +2315,7 @@
       }, 3000);
     }
 
-    // ==================== UTILITIES ====================
+    // Helpers
     function formatFileSize(bytes) {
       if (!bytes || bytes === 0) return '0 B';
       const k = 1024;
@@ -2153,10 +2330,9 @@
       return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
-    // Keyboard navigation
+    // Keyboard Shortcuts
     function setupKeyboardListeners() {
       document.addEventListener("keydown", (e) => {
-        // Esc closes modal or lightbox
         if (e.key === "Escape") {
           closeLightbox();
           closeShareModal();
@@ -2164,23 +2340,30 @@
           closeEditModal();
           closeSettingsModal();
           closeNewAlbumModal();
+          clearBatchSelection();
         }
-        // Left/Right arrow in lightbox
         if (!document.getElementById("lightboxModal").classList.contains("hidden")) {
           if (e.key === "ArrowLeft") navigateLightbox(-1);
           if (e.key === "ArrowRight") navigateLightbox(1);
           if (e.key === "+" || e.key === "=") zoomLightbox(0.2);
           if (e.key === "-") zoomLightbox(-0.2);
+          if (e.key.toLowerCase() === "r") rotateLightbox();
         }
-        // Slash focuses search if not typing in input
         if (e.key === "/" && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
           e.preventDefault();
           document.getElementById("searchInput")?.focus();
         }
+        if (e.key.toLowerCase() === "u" && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          openUploadModal();
+        }
+        if (e.key.toLowerCase() === "a" && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          openNewAlbumModal();
+        }
       });
     }
 
-    // Launch
     window.addEventListener("DOMContentLoaded", initApp);
   </script>
 
