@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oladizz MediaVault | Photo Sharing & Organizing Studio</title>
+  <title>PicShare | Post, Organize & Share Pictures</title>
   
   <!-- SEO & Social Open Graph -->
-  <meta name="description" content="Decentralized, fast photo posting and sharing platform by Oladizz. Upload, organize in albums, and share high-resolution images instantly with public or unlisted share links.">
-  <meta property="og:title" content="Oladizz MediaVault - Photo Sharing & Portfolio Studio">
+  <meta name="description" content="Fast, decentralized picture posting and image sharing platform. Upload, organize in smart albums, and share high-resolution pictures and image files with anyone via permanent public or unlisted links.">
+  <meta property="og:title" content="PicShare - Post, Organize & Share Pictures">
   <meta property="og:description" content="Upload, organize, and share high-resolution images with permanent links and smart albums.">
   <meta property="og:type" content="website">
 
@@ -130,10 +130,10 @@
           </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">Oladizz</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 font-mono font-semibold border border-brand-500/20">MediaVault</span>
+              <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">PicShare</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 font-mono font-semibold border border-brand-500/20">PhotoHub</span>
             </div>
-            <p class="text-[11px] text-slate-400 leading-none">Photo Sharing & Organizing Studio</p>
+            <p class="text-[11px] text-slate-400 leading-none">Post, Organize & Share Pictures</p>
           </div>
         </a>
       </div>
@@ -344,7 +344,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-2">
         <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-        <span>Built by <strong class="text-slate-300">Oladizz</strong> for Web3, Portfolio & Rapid Photo Sharing</span>
+        <span>Built for Fast Picture Posting, Organizing & Instant Sharing</span>
       </div>
       <div class="flex items-center gap-4">
         <a href="https://github.com/Oladizz" target="_blank" class="hover:text-slate-300 transition-colors flex items-center gap-1">
@@ -875,7 +875,7 @@
       },
       {
         id: "sample-2",
-        title: "Oladizz Modern Dark Dashboard UI Kit",
+        title: "Modern Dark Dashboard UI Kit",
         album: "design",
         visibility: "public",
         tags: ["ui", "design", "figma", "glassmorphism"],
@@ -1626,7 +1626,7 @@
             const metadata = JSON.stringify({
               name: file.name,
               keyvalues: {
-                uploader: "Oladizz",
+                uploader: "PicShare",
                 album: album,
                 visibility: visibility
               }
@@ -1829,7 +1829,7 @@
       if (navigator.share) {
         try {
           await navigator.share({
-            title: photo.title || "Oladizz MediaVault Picture",
+            title: photo.title || "PicShare Picture",
             text: `Check out this picture: ${photo.title}`,
             url: shareUrl
           });
@@ -2061,7 +2061,7 @@
       };
       const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      downloadFile(url, `oladizz-mediavault-backup-${new Date().toISOString().split('T')[0]}.json`);
+      downloadFile(url, `picshare-backup-${new Date().toISOString().split('T')[0]}.json`);
     }
 
     function importBackupData(event) {
