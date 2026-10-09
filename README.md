@@ -19,6 +19,7 @@ View real-time statistics of my GitHub account:
 
 | Dashboard | Description |
 |-----------|-------------|
+| [**📸 MediaVault (Photo Studio & Sharing)**](gallery.html) | **New** - Post pictures, organize by smart albums & tags, and share with anyone worldwide via permanent IPFS & public/unlisted links. |
 | [**Account Metrics (GitHub Actions)**](account-metrics-github-actions.html) | **Recommended** - Full account overview with live metrics, fetched automatically every 6 hours. No input required. |
 | [**Single Repository Metrics**](metrics.html) | Detailed metrics for this repository specifically. |
 | [**Interactive Dashboard (PAT Input)**](account-metrics.html) | Real-time metrics by entering a GitHub PAT token in your browser. |
